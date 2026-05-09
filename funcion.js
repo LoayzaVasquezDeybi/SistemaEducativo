@@ -36,7 +36,7 @@ function navigate(panelName) {
     };
 
     // ANTI-CACHÉ: Agrega una marca de tiempo para obligar al navegador a descargar el archivo real
-    const urlReal = `/modulos/${panelName}.html?v=${new Date().getTime()}`;
+    const urlReal = `./modulos/${panelName}.html?v=${new Date().getTime()}`;
 
     fetch(urlReal)
         .then(response => {
@@ -47,6 +47,15 @@ function navigate(panelName) {
             container.innerHTML = html;
             title.textContent = titles[panelName] || panelName.charAt(0).toUpperCase() + panelName.slice(1);
             actualizarSidebar(panelName);
+            
+            // EJECUTAR LA FUNCIÓN INICIALIZADORA DEL MÓDULO
+            if (typeof window['inicializar' + panelName.charAt(0).toUpperCase() + panelName.slice(1)] === 'function') {
+                window['inicializar' + panelName.charAt(0).toUpperCase() + panelName.slice(1)]();
+            } else if (panelName === 'usuarios' && typeof inicializarUsuarios === 'function') {
+                inicializarUsuarios();
+            } else if (panelName === 'estudiantes' && typeof inicializarEstudiantes === 'function') {
+                inicializarEstudiantes();
+            }
         })
         .catch(error => {
             console.error("Fallo el Fetch:", error);
