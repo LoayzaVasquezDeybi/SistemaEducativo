@@ -1,0 +1,21 @@
+<div class="sec-title">Registro de Notas</div>
+<div class="sec-sub">Ingreso y consulta de calificaciones por período</div>
+<div class="card">
+  <div style="display:flex;gap:10px;margin-bottom:16px;">
+    <select><option>3° A</option><option>1° B</option></select>
+    <select><option>Matemáticas</option><option>Comunicación</option><option>Ciencias</option></select>
+    <select><option>Bimestre 1</option><option>Bimestre 2</option></select>
+    <button class="btn btn-secondary btn-sm">Filtrar</button>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Estudiante</th><th>Práctica</th><th>Examen</th><th>Trabajo</th><th>Promedio</th><th>Estado</th></tr></thead>
+      <tbody>
+        <tr><td>Ana García</td><td><input type="number" style="width:60px;padding:4px 6px;" value="18"></td><td><input type="number" style="width:60px;padding:4px 6px;" value="16"></td><td><input type="number" style="width:60px;padding:4px 6px;" value="17"></td><td><strong>17</strong></td><td><span class="tag tag-green">Aprobado</span></td></tr>
+        <tr><td>Diego Martínez</td><td><input type="number" style="width:60px;padding:4px 6px;" value="12"></td><td><input type="number" style="width:60px;padding:4px 6px;" value="10"></td><td><input type="number" style="width:60px;padding:4px 6px;" value="11"></td><td><strong>11</strong></td><td><span class="tag tag-amber">En riesgo</span></td></tr>
+        <tr><td>Lucía Flores</td><td><input type="number" style="width:60px;padding:4px 6px;" value="8"></td><td><input type="number" style="width:60px;padding:4px 6px;" value="7"></td><td><input type="number" style="width:60px;padding:4px 6px;" value="9"></td><td><strong>8</strong></td><td><span class="tag tag-red">Desaprobado</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="btn-row" style="margin-top:16px;"><button class="btn btn-primary">Guardar notas</button><button class="btn btn-secondary">Reporte PDF</button></div>
+</div>

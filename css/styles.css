@@ -35,7 +35,11 @@
     font-weight: 700; font-size: 13px; color: var(--accent);
     margin-bottom: 4px;
   }
-  .sidebar-header .brand svg { flex-shrink: 0; }
+  .sidebar-header .brand svg { 
+      width: 70px; 
+      height:82px; 
+      flex-shrink: 0; 
+  }
   .sidebar-header .inst { font-size: 11px; color: var(--muted); line-height: 1.4; }
   .badge-year {
     display: inline-block; margin-top: 8px;

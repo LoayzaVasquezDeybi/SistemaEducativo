@@ -1,0 +1,21 @@
+<div class="sec-title">Control de Asistencia</div>
+<div class="sec-sub">Registro diario — 05 de mayo de 2026</div>
+<div class="card">
+  <div style="display:flex;gap:10px;margin-bottom:16px;">
+    <input type="date" value="2026-05-05">
+    <select><option>3° A</option><option>1° B</option></select>
+    <button class="btn btn-secondary btn-sm">Cargar</button>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Estudiante</th><th>Estado</th><th>Observación</th></tr></thead>
+      <tbody>
+        <tr><td>Ana García</td><td><select class="asis-select"><option>Presente</option><option>Tardanza</option><option>Falta</option></select></td><td><input type="text" placeholder="—" style="padding:4px 8px;font-size:12px;"></td></tr>
+        <tr><td>Diego Martínez</td><td><select class="asis-select"><option selected>Tardanza</option><option>Presente</option><option>Falta</option></select></td><td><input type="text" placeholder="Llegó 10 min tarde" style="padding:4px 8px;font-size:12px;"></td></tr>
+        <tr><td>Lucía Flores</td><td><select class="asis-select"><option>Presente</option><option>Tardanza</option><option selected>Falta</option></select></td><td><input type="text" placeholder="Justificada" style="padding:4px 8px;font-size:12px;"></td></tr>
+        <tr><td>Carlos Soto</td><td><select class="asis-select"><option selected>Presente</option><option>Tardanza</option><option>Falta</option></select></td><td><input type="text" placeholder="—" style="padding:4px 8px;font-size:12px;"></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="btn-row" style="margin-top:16px;"><button class="btn btn-primary">Guardar asistencia</button></div>
+</div>

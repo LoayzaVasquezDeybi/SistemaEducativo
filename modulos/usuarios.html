@@ -1,0 +1,29 @@
+<div class="sec-title">Gestión de Usuarios</div>
+<div class="sec-sub">Registro y administración de cuentas del sistema</div>
+<div class="card">
+  <div class="card-title">Nuevo usuario</div>
+  <div class="form-row cols3">
+    <div class="form-group"><label>Nombre</label><input type="text" placeholder="Juan"></div>
+    <div class="form-group"><label>Apellido</label><input type="text" placeholder="Pérez"></div>
+    <div class="form-group"><label>DNI</label><input type="text" placeholder="12345678"></div>
+  </div>
+  <div class="form-row cols3">
+    <div class="form-group"><label>Email</label><input type="email" placeholder="usuario@ie.edu.pe"></div>
+    <div class="form-group"><label>Contraseña</label><input type="password" placeholder="••••••••"></div>
+    <div class="form-group"><label>Rol</label><select><option>Administrador</option><option>Docente</option><option>Auxiliar</option></select></div>
+  </div>
+  <div class="btn-row"><button class="btn btn-primary">Registrar usuario</button><button class="btn btn-secondary">Limpiar</button></div>
+</div>
+<div class="card">
+  <div class="card-title">Listado de usuarios</div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Nombre</th><th>DNI</th><th>Email</th><th>Rol</th><th>Estado</th><th>Acciones</th></tr></thead>
+      <tbody>
+        <tr><td>Juan Pérez</td><td>12345678</td><td>j.perez@ie.edu.pe</td><td><span class="tag tag-blue">Admin</span></td><td><span class="tag tag-green">Activo</span></td><td><button class="btn btn-secondary btn-sm">Editar</button></td></tr>
+        <tr><td>María López</td><td>87654321</td><td>m.lopez@ie.edu.pe</td><td><span class="tag tag-amber">Docente</span></td><td><span class="tag tag-green">Activo</span></td><td><button class="btn btn-secondary btn-sm">Editar</button></td></tr>
+        <tr><td>Carlos Ruiz</td><td>11223344</td><td>c.ruiz@ie.edu.pe</td><td><span class="tag tag-gray">Auxiliar</span></td><td><span class="tag tag-red">Inactivo</span></td><td><button class="btn btn-secondary btn-sm">Editar</button></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
