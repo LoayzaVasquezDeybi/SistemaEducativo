@@ -12,6 +12,6 @@ try {
     // echo "¡Magia pura! Conexión exitosa..."; 
 
 } catch(PDOException $e) {
-    die("Error crítico de conexión: " . $e->getMessage());
+    die(json_encode(['success' => false, 'error' => "Error crítico de conexión: " . $e->getMessage()]));
 }
 ?>

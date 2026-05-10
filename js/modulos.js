@@ -6,7 +6,7 @@ async function cargarDatos(modulo, accion = 'obtener') {
         if (result.success) {
             return result.data || result;
         } else {
-            alert('Error: ' + result.message);
+            alert('Error: ' + (result.error || result.message || 'Error desconocido'));
             return null;
         }
     } catch(error) {
@@ -28,7 +28,7 @@ async function guardarDatos(modulo, accion, datos) {
             alert(result.message);
             return true;
         } else {
-            alert('Error: ' + result.error);
+            alert('Error: ' + (result.error || result.message || 'Error desconocido'));
             return false;
         }
     } catch(error) {
@@ -56,11 +56,26 @@ let editandoID = null; // Variable global para rastrear si estamos editando
 function inicializarUsuarios() {
     console.log('Inicializando módulo Usuarios...');
     cargarUsuarios();
+    cargarRolesUsuario(); // Cargar roles en el <select>
     const btnRegistrar = document.getElementById('btn-registrar-usuario');
     if (btnRegistrar) {
         // Usamos una función anónima para que siempre use la lógica de registrarUsuario
         btnRegistrar.onclick = registrarUsuario; 
         console.log('Evento registrar usuario asignado');
+    }
+}
+
+async function cargarRolesUsuario() {
+    const result = await cargarDatos('usuarios', 'combo');
+    if (result && result.success) {
+        // Busca el primer <select> dentro de la tarjeta de registro/edición
+        const select = document.querySelector('.card form select, .card select'); 
+        if (select) {
+            select.innerHTML = '<option value="">Seleccionar Rol...</option>';
+            result.roles.forEach(rol => {
+                select.innerHTML += `<option value="${rol.id_rol}">${rol.nombre}</option>`;
+            });
+        }
     }
 }
 
@@ -73,7 +88,7 @@ async function cargarUsuarios() {
         if (tbody) {
             tbody.innerHTML = '';
             usuarios.forEach(user => {
-                const rolTexto = user.id_rol == 1 ? 'Administrador' : (user.id_rol == 2 ? 'Docente' : 'Auxiliar');
+                const rolTexto = user.id_rol == 1 ? 'Administrador' : (user.id_rol == 2 ? 'Docente' : 'Alumno');
                 const estadoTexto = user.id_estado_usuario == 1 ? 'Activo' : 'Inactivo';
                 const tagColor = user.id_estado_usuario == 1 ? 'green' : 'red';
 
@@ -177,6 +192,8 @@ function limpiarFormularioEdicion() {
 }
 
 // ========== MÓDULO ESTUDIANTES ==========
+let editandoEstudianteID = null; // Rastrear si estamos editando un estudiante
+
 function inicializarEstudiantes() {
     cargarEstudiantes();
     cargarCombos();
@@ -189,6 +206,7 @@ async function cargarEstudiantes() {
         const tbody = document.querySelector('#tabla-estudiantes tbody');
         tbody.innerHTML = '';
         estudiantes.forEach(est => {
+            const estJSON = JSON.stringify(est).replace(/'/g, "&apos;");
             const fila = `
                 <tr>
                     <td><span style="font-family:'DM Mono';font-size:12px;">${est.codigo}</span></td>
@@ -196,7 +214,7 @@ async function cargarEstudiantes() {
                     <td>${est.dni}</td>
                     <td>${est.grado} ${est.seccion}</td>
                     <td><span class="tag tag-${est.estado === 'activo' ? 'green' : 'amber'}">${est.estado.charAt(0).toUpperCase() + est.estado.slice(1)}</span></td>
-                    <td><button class="btn btn-secondary btn-sm">Editar</button></td>
+                    <td><button class="btn btn-secondary btn-sm" onclick='prepararEdicionEstudiante(${estJSON})'>Editar</button></td>
                 </tr>
             `;
             tbody.innerHTML += fila;
@@ -207,37 +225,98 @@ async function cargarEstudiantes() {
 async function cargarCombos() {
     const result = await cargarDatos('estudiantes', 'combo');
     if (result && result.success) {
-        const select = document.querySelector('select');
-        select.innerHTML = '<option>Seleccionar...</option>';
-        result.grados.forEach(grado => {
-            select.innerHTML += `<option value="${grado.id_grado}">${grado.nombre}</option>`;
-        });
+        const selects = document.querySelectorAll('.card select');
+        
+        if (selects.length > 0) {
+            selects[0].innerHTML = '<option value="">Seleccionar Grado...</option>';
+            result.grados.forEach(grado => {
+                selects[0].innerHTML += `<option value="${grado.id_grado}">${grado.nombre}</option>`;
+            });
+        }
+        if (selects.length > 1) {
+            selects[1].innerHTML = '<option value="">Seleccionar Sección...</option>';
+            result.secciones.forEach(seccion => {
+                selects[1].innerHTML += `<option value="${seccion.id_seccion}">${seccion.nombre}</option>`;
+            });
+        }
+    }
+}
+
+function prepararEdicionEstudiante(est) {
+    editandoEstudianteID = est.id_estudiante;
+    const inputs = document.querySelectorAll('.card input');
+    const selects = document.querySelectorAll('.card select');
+
+    if (inputs.length >= 5) {
+        inputs[0].value = est.codigo || '';
+        inputs[1].value = est.nombre || '';
+        inputs[2].value = est.apellido || '';
+        inputs[3].value = est.dni || '';
+        inputs[4].value = est.fecha_nacimiento || '';
+    }
+    if (selects.length > 0) selects[0].value = est.id_grado || '';
+    if (selects.length > 1) selects[1].value = est.id_seccion || '';
+
+    const btnRegistrar = document.getElementById('btn-registrar-estudiante');
+    if (btnRegistrar) {
+        btnRegistrar.textContent = "Actualizar datos";
+        btnRegistrar.classList.replace('btn-primary', 'btn-amber');
     }
 }
 
 async function registrarEstudiante() {
-    const codigo = document.querySelector('input[placeholder="EST-2026-001"]').value;
-    const nombre = document.querySelector('input[placeholder="Ana Lucía"]').value;
-    const apellido = document.querySelector('input[placeholder="García Ríos"]').value;
-    const dni = document.querySelector('input[placeholder="74123456"]').value;
-    const fecha_nacimiento = document.querySelector('input[type="date"]').value;
-    const id_grado = document.querySelector('select').value;
+    // Buscamos los campos dentro de la tarjeta para evitar errores por placeholders distintos
+    const inputs = document.querySelectorAll('.card input');
+    const selects = document.querySelectorAll('.card select');
 
-    if (!codigo || !nombre || !apellido || !dni || !fecha_nacimiento) {
-        alert('Completa todos los campos');
+    if (inputs.length < 5) {
+        alert('Error: No se encontraron los campos necesarios en el formulario HTML.');
         return;
     }
 
-    const success = await guardarDatos('estudiantes', 'crear', {
-        codigo, nombre, apellido, dni, fecha_nacimiento, id_grado, id_seccion: 1
-    });
+    const codigo = inputs[0].value;
+    const nombre = inputs[1].value;
+    const apellido = inputs[2].value;
+    const dni = inputs[3].value;
+    const fecha_nacimiento = inputs[4].value;
+    const id_grado = selects.length > 0 ? selects[0].value : '';
+    const id_seccion = selects.length > 1 ? selects[1].value : '';
+
+    if (!codigo || !nombre || !apellido || !dni || !fecha_nacimiento || !id_grado || !id_seccion) {
+        alert('Por favor, completa todos los campos, incluyendo seleccionar el Grado y la Sección.');
+        return;
+    }
+
+    const datos = {
+        codigo, nombre, apellido, dni, fecha_nacimiento, id_grado, id_seccion
+    };
+
+    let accion = 'crear';
+    if (editandoEstudianteID) {
+        datos.id_estudiante = editandoEstudianteID;
+        datos.estado = 'activo';
+        accion = 'actualizar';
+    }
+
+    const success = await guardarDatos('estudiantes', accion, datos);
 
     if (success) {
-        document.querySelector('input[placeholder="EST-2026-001"]').value = '';
-        document.querySelector('input[placeholder="Ana Lucía"]').value = '';
-        document.querySelector('input[placeholder="García Ríos"]').value = '';
-        document.querySelector('input[placeholder="74123456"]').value = '';
-        document.querySelector('input[type="date"]').value = '';
+        limpiarFormularioEdicionEstudiante();
         cargarEstudiantes();
     }
+}
+
+function limpiarFormularioEdicionEstudiante() {
+    editandoEstudianteID = null;
+    const btnRegistrar = document.getElementById('btn-registrar-estudiante');
+    if(btnRegistrar) {
+        btnRegistrar.textContent = "Registrar estudiante";
+        btnRegistrar.classList.remove('btn-amber');
+        btnRegistrar.classList.add('btn-primary');
+    }
+    
+    const inputs = document.querySelectorAll('.card input');
+    inputs.forEach(i => i.value = '');
+    const selects = document.querySelectorAll('.card select');
+    selects.forEach(s => s.selectedIndex = 0);
 }

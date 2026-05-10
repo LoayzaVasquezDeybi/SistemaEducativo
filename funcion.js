@@ -1,14 +1,59 @@
-document.addEventListener('DOMContentLoaded', () => {
-    // 1. Asignar el evento click a todos los items del sidebar
-    document.querySelectorAll('.nav-item').forEach(item => {
-        item.addEventListener('click', () => {
-            const panel = item.getAttribute('data-panel');
-            if(panel) navigate(panel);
-        });
-    });
+document.addEventListener('DOMContentLoaded', async () => {
+    // 1. Verificar si el usuario ha iniciado sesión
+    try {
+        const response = await fetch('./api/session.php');
+        const data = await response.json();
+        
+        if (!data.success) {
+            // Si no hay sesión, botarlo al login
+            window.location.href = 'login.html';
+            return;
+        }
 
-    // 2. Cargar el dashboard por defecto al iniciar
-    navigate('dashboard');
+        // 2. Mostrar sus datos reales en la barra superior
+        const user = data.usuario;
+        const rolesTexto = { 1: 'Admin', 2: 'Docente', 3: 'Alumno' };
+        const nombreRol = rolesTexto[user.rol] || 'Usuario';
+        document.getElementById('user-name-display').textContent = `${nombreRol}: ${user.nombres} ${user.apellidos}`;
+
+        // 3. Permisos por rol (Qué paneles puede ver cada quién)
+        const permisos = {
+            1: ['dashboard', 'usuarios', 'estudiantes', 'docentes', 'apoderados', 'roles', 'cursos', 'aulas', 'horarios', 'vacantes', 'notas', 'asistencia', 'incidencias', 'matricula', 'ficha', 'pagos', 'documentos'], // Admin ve TODO
+            2: ['dashboard', 'estudiantes', 'horarios', 'notas', 'asistencia', 'incidencias'], // Docente solo ve lo académico
+            3: ['dashboard', 'horarios', 'notas', 'ficha'] // Alumno solo ve su info básica
+        };
+        
+        const misPermisos = permisos[user.rol] || permisos[3];
+
+        // 4. Filtrar el menú lateral (sidebar) ocultando lo que no puede ver
+        document.querySelectorAll('.nav-item').forEach(item => {
+            const panel = item.getAttribute('data-panel');
+            if (!misPermisos.includes(panel)) {
+                item.style.display = 'none'; // Ocultar
+            } else {
+                item.addEventListener('click', () => {
+                    if(panel) navigate(panel);
+                });
+            }
+        });
+
+        // Ocultar cabeceras de secciones enteras que se hayan quedado vacías
+        document.querySelectorAll('.nav-section').forEach(section => {
+            const itemsVisibles = Array.from(section.querySelectorAll('.nav-item')).filter(i => i.style.display !== 'none');
+            if (itemsVisibles.length === 0) section.style.display = 'none';
+        });
+
+        // 5. Cargar el dashboard y asignar evento a cerrar sesión
+        navigate('dashboard');
+        
+        document.getElementById('btn-logout').addEventListener('click', async () => {
+            await fetch('./api/logout.php');
+            window.location.href = 'login.html';
+        });
+
+    } catch (error) {
+        console.error("Error al verificar sesión:", error);
+    }
 });
 
 function navigate(panelName) {

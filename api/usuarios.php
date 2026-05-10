@@ -16,6 +16,13 @@ try {
             echo json_encode(['success' => true, 'data' => $usuarios]);
             break;
 
+        // NUEVO: OBTENER COMBOS (Roles)
+        case 'combo':
+            $stmt = $conn->query("SELECT id_rol, nombre FROM rol ORDER BY nombre");
+            $roles = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            echo json_encode(['success' => true, 'roles' => $roles]);
+            break;
+
         // 2. CREAR USUARIO
         case 'crear':
             $input = file_get_contents('php://input');
