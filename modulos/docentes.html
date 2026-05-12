@@ -8,21 +8,18 @@
     <div class="form-group"><label>DNI</label><input type="text" placeholder="20123456"></div>
   </div>
   <div class="form-row cols3">
+    <div class="form-group"><label>Email</label><input type="email" placeholder="docente@escuela.com"></div>
     <div class="form-group"><label>Especialidad</label><input type="text" placeholder="Matemáticas"></div>
-    <div class="form-group"><label>Teléfono</label><input type="text" placeholder="987654321"></div>
     <div class="form-group"><label>Curso asignado</label><select><option>Matemáticas</option><option>Comunicación</option><option>Ciencias</option><option>Historia</option></select></div>
   </div>
-  <div class="btn-row"><button class="btn btn-primary">Registrar docente</button></div>
+  <div class="btn-row"><button id="btn-registrar-docente" class="btn btn-primary">Registrar docente</button></div>
 </div>
 <div class="card">
   <div class="card-title">Listado de docentes</div>
   <div class="table-wrap">
-    <table>
-      <thead><tr><th>Nombre</th><th>DNI</th><th>Especialidad</th><th>Cursos</th><th>Estado</th></tr></thead>
+    <table id="tabla-docentes">
+      <thead><tr><th>Nombre</th><th>DNI</th><th>Email</th><th>Especialidad</th><th>Estado</th><th>Acciones</th></tr></thead>
       <tbody>
-        <tr><td>Luis Torres</td><td>20123456</td><td>Matemáticas</td><td>3</td><td><span class="tag tag-green">Activo</span></td></tr>
-        <tr><td>Rosa Quispe</td><td>21234567</td><td>Comunicación</td><td>4</td><td><span class="tag tag-green">Activo</span></td></tr>
-        <tr><td>Pedro Salcedo</td><td>22345678</td><td>Ciencias</td><td>2</td><td><span class="tag tag-green">Activo</span></td></tr>
       </tbody>
     </table>
   </div>
