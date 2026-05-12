@@ -3,28 +3,30 @@
 <div class="card">
   <div class="card-title">Nuevo curso</div>
   <div class="form-row cols3">
-    <div class="form-group"><label>Nombre del curso</label><input type="text" placeholder="Matemáticas"></div>
-    <div class="form-group"><label>Código</label><input type="text" placeholder="MAT-01"></div>
-    <div class="form-group"><label>Docente asignado</label><select><option>Luis Torres</option><option>Rosa Quispe</option><option>Pedro Salcedo</option></select></div>
+    <div class="form-group"><label>Nombre del curso</label><input type="text" id="curso-nombre" placeholder="Ej. Matemáticas"></div>
+    <div class="form-group"><label>Descripción</label><input type="text" id="curso-descripcion" placeholder="Opcional: Detalles del curso"></div>
+    <div class="form-group"><label>Créditos</label><input type="number" id="curso-creditos" placeholder="4"></div>
   </div>
   <div class="form-row cols3">
-    <div class="form-group"><label>Grado</label><select><option>1°</option><option>2°</option><option>3°</option><option>4°</option><option>5°</option></select></div>
-    <div class="form-group"><label>Horas semanales</label><input type="number" placeholder="4"></div>
-    <div class="form-group"><label>Estado</label><select><option>Activo</option><option>Inactivo</option></select></div>
+    <div class="form-group"><label>Docente asignado</label><select id="curso-docente"><option value="">Sin asignar</option></select></div>
   </div>
-  <div class="btn-row"><button class="btn btn-primary">Registrar curso</button></div>
+  <div class="btn-row">
+    <button class="btn btn-primary" id="btn-registrar-curso">Registrar curso</button>
+    <button class="btn btn-secondary" onclick="limpiarFormularioEdicionCurso()">Limpiar / Cancelar</button>
+  </div>
 </div>
 <div class="card">
   <div class="card-title">Listado de cursos</div>
   <div class="table-wrap">
-    <table>
-      <thead><tr><th>Código</th><th>Curso</th><th>Docente</th><th>Grado</th><th>Horas</th><th>Estado</th></tr></thead>
+    <table id="tabla-cursos">
+      <thead><tr><th>Nombre</th><th>Descripción</th><th>Créditos</th><th>Docente</th><th>Estado</th><th>Acciones</th></tr></thead>
       <tbody>
-        <tr><td>MAT-01</td><td>Matemáticas</td><td>Luis Torres</td><td>3°</td><td>4</td><td><span class="tag tag-green">Activo</span></td></tr>
-        <tr><td>COM-01</td><td>Comunicación</td><td>Rosa Quispe</td><td>3°</td><td>5</td><td><span class="tag tag-green">Activo</span></td></tr>
-        <tr><td>CIE-01</td><td>Ciencias</td><td>Pedro Salcedo</td><td>2°</td><td>3</td><td><span class="tag tag-green">Activo</span></td></tr>
-        <tr><td>HIS-01</td><td>Historia</td><td>Rosa Quispe</td><td>4°</td><td>3</td><td><span class="tag tag-amber">Inactivo</span></td></tr>
       </tbody>
     </table>
   </div>
 </div>
+<script>
+  if (typeof inicializarCursos === 'function') {
+    inicializarCursos();
+  }
+</script>
