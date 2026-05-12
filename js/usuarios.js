@@ -11,6 +11,22 @@ function inicializarUsuarios() {
         btnRegistrar.onclick = registrarUsuario; 
         console.log('Evento registrar usuario asignado');
     }
+
+    // --- Nuevos botones de exportación ---
+    const btnExportarPdf = document.getElementById('btn-exportar-usuarios-pdf');
+    if (btnExportarPdf) {
+        btnExportarPdf.addEventListener('click', () => {
+            window.open('api/exportar_usuarios_pdf.php', '_blank');
+        });
+    }
+
+    const btnExportarExcel = document.getElementById('btn-exportar-usuarios-excel');
+    if (btnExportarExcel) {
+        btnExportarExcel.addEventListener('click', () => {
+            window.open('api/exportar_usuarios_excel.php', '_blank');
+        });
+    }
+    // --- Fin nuevos botones de exportación ---
     configurarBuscador('buscar-usuario', 'tabla-usuarios');
 }
 

@@ -1,6 +1,6 @@
 body {
     font-family: 'DM Sans', 'Inter', sans-serif;
-    background-color: #f4f6f8;
+    background: linear-gradient(to right, #8c366c, #6f64e7);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -8,10 +8,11 @@ body {
     margin: 0;
 }
 .login-card {
-    background: white;
+    background: linear-gradient(to right, #f8f0f5, #f0effc); /* Gradiente sutil que concuerda con el fondo */
     padding: 40px;
     border-radius: 12px;
     box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+    border-top: 5px solid #8c366c;
     width: 100%;
     max-width: 380px;
     box-sizing: border-box;
@@ -28,14 +29,14 @@ body {
     outline: none; 
     transition: border-color 0.2s; 
 }
-.form-group input:focus { border-color: #3b82f6; }
+.form-group input:focus { border-color: #6f64e7; }
 .btn-login { 
     width: 100%; 
     padding: 12px; 
-    background-color: #3b82f6; 
+    background: linear-gradient(to right, #8c366c, #6f64e7); 
     color: white; 
     border: none; 
-    border-radius: 6px; cursor: pointer; font-size: 16px; font-weight: 600; transition: background-color 0.2s; 
+    border-radius: 6px; cursor: pointer; font-size: 16px; font-weight: 600; transition: opacity 0.2s, transform 0.2s; 
 }
-.btn-login:hover { background-color: #2563eb; }
+.btn-login:hover { opacity: 0.9; transform: translateY(-1px); }
 .error-msg { color: #dc2626; font-size: 14px; margin-top: 15px; text-align: center; display: none; background: #fee2e2; padding: 10px; border-radius: 6px; }

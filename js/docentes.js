@@ -9,6 +9,15 @@ function inicializarDocentes() {
         btnRegistrar.removeEventListener('click', registrarDocente);
         btnRegistrar.addEventListener('click', registrarDocente);
     }
+
+    // Configuración del botón de Exportar PDF para Docentes
+    const btnExportar = document.getElementById('btn-exportar-docentes-pdf');
+    if (btnExportar) {
+        btnExportar.addEventListener('click', () => {
+            window.open('api/exportar_docentes.php', '_blank');
+        });
+    }
+
     configurarBuscador('buscar-docente', 'tabla-docentes');
 }
 

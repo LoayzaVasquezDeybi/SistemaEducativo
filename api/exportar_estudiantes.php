@@ -10,12 +10,12 @@ if (!isset($_SESSION['usuario_id'])) {
 
 // Consulta para obtener los datos requeridos: código, nombres completos, dni, grado y estado
 $query = "SELECT 
-            e.codigo_estudiante, 
-            CONCAT(e.nombre, ' ', e.apellido) as nombres_completos, 
+            UPPER(e.codigo_estudiante) as codigo_estudiante, 
+            UPPER(CONCAT(e.nombre, ' ', e.apellido)) as nombres_completos, 
             e.dni, 
-            COALESCE(g.nombre, 'Sin grado') as grado, 
-            COALESCE(s.nombre, '-') as seccion,
-            IFNULL(e.estado, 'activo') as estado 
+            UPPER(COALESCE(g.nombre, 'Sin grado')) as grado, 
+            UPPER(COALESCE(s.nombre, '-')) as seccion,
+            UPPER(IFNULL(e.estado, 'activo')) as estado 
           FROM estudiante e 
           LEFT JOIN grado g ON e.id_grado = g.id_grado 
           LEFT JOIN seccion s ON e.id_seccion = s.id_seccion
@@ -26,7 +26,7 @@ try {
     $estudiantes = $stmt->fetchAll(PDO::FETCH_ASSOC);
     
     $total = count($estudiantes);
-    $activos = count(array_filter($estudiantes, fn($e) => $e['estado'] === 'activo'));
+    $activos = count(array_filter($estudiantes, fn($e) => $e['estado'] === 'ACTIVO'));
 
     // Obtener el periodo académico actual de forma dinámica
     $stmtPeriodo = $conn->query("SELECT anio FROM periodo_academico ORDER BY id_periodo DESC LIMIT 1");
@@ -263,7 +263,7 @@ tr { page-break-inside: avoid; }
                 <td><?php echo htmlspecialchars($est['dni']); ?></td>
                 <td class="text-muted"><?php echo htmlspecialchars($est['grado'] . ' - ' . $est['seccion']); ?></td>
                 <td>
-                    <span class="status <?php echo ($est['estado'] == 'activo') ? 'status-activo' : 'status-inactivo'; ?>">
+                    <span class="status <?php echo ($est['estado'] == 'ACTIVO') ? 'status-activo' : 'status-inactivo'; ?>">
                         <?php echo htmlspecialchars($est['estado']); ?>
                     </span>
                 </td>

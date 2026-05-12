@@ -3,26 +3,28 @@
 <div class="card">
   <div class="card-title">Nuevo usuario</div>
   <div class="form-row cols3">
-    <div class="form-group"><label>Nombre</label><input type="text" placeholder="Juan"></div>
-    <div class="form-group"><label>Apellido</label><input type="text" placeholder="Pérez"></div>
-    <div class="form-group"><label>DNI</label><input type="text" placeholder="12345678"></div>
+    <div class="form-group"><label>Nombre</label><input type="text" id="user-nombre" placeholder="Juan"></div>
+    <div class="form-group"><label>Apellido</label><input type="text" id="user-apellido" placeholder="Pérez"></div>
+    <div class="form-group"><label>DNI</label><input type="text" id="user-dni" placeholder="12345678"></div>
   </div>
   <div class="form-row cols3">
-    <div class="form-group"><label>Email</label><input type="email" placeholder="usuario@ie.edu.pe"></div>
-    <div class="form-group"><label>Contraseña</label><input type="password" placeholder="••••••••"></div>
+    <div class="form-group"><label>Email</label><input type="email" id="user-email" placeholder="usuario@ie.edu.pe"></div>
+    <div class="form-group"><label>Contraseña</label><input type="password" id="user-pass" placeholder="••••••••"></div>
     <div class="form-group">
     <label>Rol</label>
-    <select>
+    <select id="user-rol">
         <option value="1">Administrador</option>
         <option value="2">Docente</option>
         <option value="3">Estudiante</option>
-        </option>
     </select>
 </div>
   </div>
   <div class="btn-row">
     <button class="btn btn-primary" id="btn-registrar-usuario">Registrar usuario</button>
     <button class="btn btn-secondary" onclick="limpiarFormularioEdicion()">Limpiar / Cancelar</button>
+    <button class="btn btn-secondary" id="btn-exportar-usuarios-pdf"><i class="fas fa-file-pdf"></i> Exportar PDF</button>
+    <button class="btn btn-secondary" id="btn-exportar-usuarios-excel"><i class="fas fa-file-excel"></i> Exportar Excel</button>
+  </div>
 </div>
 <div class="card">
   <div class="card-title">Listado de usuarios</div>
