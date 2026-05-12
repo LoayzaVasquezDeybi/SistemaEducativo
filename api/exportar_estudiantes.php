@@ -2,6 +2,12 @@
 session_start();
 require_once '../config/conexion.php';
 
+// Validar que el usuario tenga sesión activa
+if (!isset($_SESSION['usuario_id'])) {
+    http_response_code(403);
+    die("Error 403: Acceso Prohibido. Debe iniciar sesión.");
+}
+
 // Consulta para obtener los datos requeridos: código, nombres completos, dni, grado y estado
 $query = "SELECT 
             e.codigo_estudiante, 
