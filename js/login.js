@@ -27,6 +27,11 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
             errorMsg.style.display = 'block';
             btn.textContent = 'Ingresar al sistema';
             btn.disabled = false;
+            // Limpiar campos sensibles
+            document.getElementById('password').value = '';
+            document.getElementById('password').focus();
+            document.getElementById('email').value = '';
+            document.getElementById('email').focus();
         }
     } catch (error) {
         errorMsg.textContent = 'Error de conexión con el servidor.';

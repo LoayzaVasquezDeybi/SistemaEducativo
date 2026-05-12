@@ -100,6 +100,10 @@ try {
             $stmtGet->execute([$id]);
             $doc = $stmtGet->fetch(PDO::FETCH_ASSOC);
             
+            // 1. Eliminar asignaciones de cursos primero
+            $stmtCd = $conn->prepare("DELETE FROM curso_docente WHERE id_docente=?");
+            $stmtCd->execute([$id]);
+            
             $stmt = $conn->prepare("DELETE FROM docente WHERE id_docente=?");
             $stmt->execute([$id]);
             

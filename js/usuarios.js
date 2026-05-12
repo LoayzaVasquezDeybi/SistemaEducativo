@@ -11,13 +11,13 @@ function inicializarUsuarios() {
         btnRegistrar.onclick = registrarUsuario; 
         console.log('Evento registrar usuario asignado');
     }
+    configurarBuscador('buscar-usuario', 'tabla-usuarios');
 }
 
 async function cargarRolesUsuario() {
     const result = await cargarDatos('usuarios', 'combo');
     if (result && result.success) {
-        // Busca el primer <select> dentro de la tarjeta de registro/edición
-        const select = document.querySelector('.card form select, .card select'); 
+        const select = document.getElementById('user-rol'); 
         if (select) {
             select.innerHTML = '<option value="">Seleccionar Rol...</option>';
             result.roles.forEach(rol => {
@@ -36,7 +36,7 @@ async function cargarUsuarios() {
         if (tbody) {
             tbody.innerHTML = '';
             usuarios.forEach(user => {
-                const rolTexto = user.id_rol == 1 ? 'Administrador' : (user.id_rol == 2 ? 'Docente' : 'Alumno');
+                const rolTexto = user.nombre_rol || 'Desconocido';
                 const estadoTexto = user.id_estado_usuario == 1 ? 'Activo' : 'Inactivo';
                 const tagColor = user.id_estado_usuario == 1 ? 'green' : 'red';
 
@@ -50,9 +50,12 @@ async function cargarUsuarios() {
                         <td>${user.email}</td>
                         <td><span class="tag tag-blue">${rolTexto}</span></td>
                         <td><span class="tag tag-${tagColor}">${estadoTexto}</span></td>
-                        <td>
+                        <td style="display: flex; gap: 5px;">
                             <button class="btn btn-secondary btn-sm" onclick='prepararEdicion(${userJSON})'>
                                 Editar
+                            </button>
+                            <button class="btn btn-secondary btn-sm" style="background:#fee2e2; color:#dc2626; border-color:#fca5a5;" onclick='eliminarUsuario(${user.id_usuario})'>
+                                Eliminar
                             </button>
                         </td>
                     </tr>
@@ -68,18 +71,17 @@ function prepararEdicion(user) {
     console.log('Preparando edición de:', user.nombres);
     editandoID = user.id_usuario;
 
-    const card = document.querySelector('.card');
-    const inputs = card.querySelectorAll('input');
-    const select = card.querySelector('select');
-
-    // Llenar campos con los nombres de columna de tu DB
-    inputs[0].value = user.nombres;
-    inputs[1].value = user.apellidos;
-    inputs[2].value = user.dni || '';
-    inputs[3].value = user.email;
-    inputs[4].value = ''; // Contraseña vacía por seguridad
-    inputs[4].placeholder = "Dejar en blanco para no cambiar";
-    select.value = user.id_rol;
+    document.getElementById('user-nombre').value = user.nombres || '';
+    document.getElementById('user-apellido').value = user.apellidos || '';
+    document.getElementById('user-dni').value = user.dni || '';
+    document.getElementById('user-email').value = user.email || '';
+    
+    const passInput = document.getElementById('user-pass');
+    if(passInput) {
+        passInput.value = '';
+        passInput.placeholder = "Dejar en blanco para no cambiar";
+    }
+    document.getElementById('user-rol').value = user.id_rol || '';
 
     // Cambiar aspecto del botón
     const btnRegistrar = document.getElementById('btn-registrar-usuario');
@@ -88,17 +90,13 @@ function prepararEdicion(user) {
 }
 
 async function registrarUsuario() {
-    const card = document.querySelector('.card');
-    const inputs = card.querySelectorAll('input');
-    const select = card.querySelector('select');
-
     const datos = {
-        nombre: inputs[0].value,
-        apellido: inputs[1].value,
-        dni: inputs[2].value,
-        email: inputs[3].value,
-        contrasena: inputs[4].value,
-        rol: select.value
+        nombre: document.getElementById('user-nombre').value,
+        apellido: document.getElementById('user-apellido').value,
+        dni: document.getElementById('user-dni').value,
+        email: document.getElementById('user-email').value,
+        contrasena: document.getElementById('user-pass') ? document.getElementById('user-pass').value : '',
+        rol: document.getElementById('user-rol').value
     };
 
     let accion = 'crear';
@@ -131,10 +129,15 @@ function limpiarFormularioEdicion() {
     }
     
     // Limpiamos los campos
-    const card = document.querySelector('.card');
-    card.querySelectorAll('input').forEach(i => {
-        i.value = '';
-        i.placeholder = '';
+    document.querySelectorAll('#user-nombre, #user-apellido, #user-dni, #user-email, #user-pass').forEach(i => {
+        if(i) { i.value = ''; i.placeholder = ''; }
     });
-    card.querySelector('select').selectedIndex = 0;
+    const select = document.getElementById('user-rol');
+    if(select) select.selectedIndex = 0;
+}
+
+async function eliminarUsuario(id_usuario) {
+    if (confirm('¿Estás seguro de eliminar este Usuario? Si es un docente o apoderado, sus datos enlazados también serán borrados irreversiblemente.')) {
+        if (await guardarDatos('usuarios', 'eliminar', { id_usuario })) cargarUsuarios();
+    }
 }

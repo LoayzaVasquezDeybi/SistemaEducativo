@@ -9,6 +9,7 @@ function inicializarDocentes() {
         btnRegistrar.removeEventListener('click', registrarDocente);
         btnRegistrar.addEventListener('click', registrarDocente);
     }
+    configurarBuscador('buscar-docente', 'tabla-docentes');
 }
 
 async function cargarDocentes() {
@@ -27,7 +28,10 @@ async function cargarDocentes() {
                         <td>${doc.email}</td>
                         <td>${doc.especialidad || 'N/A'}</td>
                         <td><span class="tag tag-${estado === 'activo' ? 'green' : 'amber'}">${estado.charAt(0).toUpperCase() + estado.slice(1)}</span></td>
-                        <td><button class="btn btn-secondary btn-sm" onclick='prepararEdicionDocente(${docJSON})'>Editar</button></td>
+                        <td style="display: flex; gap: 5px;">
+                            <button class="btn btn-secondary btn-sm" onclick='prepararEdicionDocente(${docJSON})'>Editar</button>
+                            <button class="btn btn-secondary btn-sm" style="background:#fee2e2; color:#dc2626; border-color:#fca5a5;" onclick='eliminarDocente(${doc.id_docente})'>Eliminar</button>
+                        </td>
                     </tr>
                 `;
                 tbody.innerHTML += fila;
@@ -87,5 +91,11 @@ async function registrarDocente() {
         if (btnRegistrar) { btnRegistrar.textContent = "Registrar docente"; btnRegistrar.classList.replace('btn-amber', 'btn-primary'); }
         inputs.forEach(i => i.value = '');
         cargarDocentes();
+    }
+}
+
+async function eliminarDocente(id_docente) {
+    if (confirm('¿Estás seguro de eliminar este Docente? Su usuario asociado también será borrado.')) {
+        if (await guardarDatos('docentes', 'eliminar', { id_docente })) cargarDocentes();
     }
 }

@@ -5,6 +5,7 @@ function inicializarEstudiantes() {
     cargarEstudiantes();
     cargarCombos();
     document.getElementById('btn-registrar-estudiante').addEventListener('click', registrarEstudiante);
+    configurarBuscador('buscar-estudiante', 'tabla-estudiantes');
 }
 
 async function cargarEstudiantes() {
@@ -21,7 +22,10 @@ async function cargarEstudiantes() {
                     <td>${est.dni}</td>
                     <td>${est.grado} ${est.seccion}</td>
                     <td><span class="tag tag-${est.estado === 'activo' ? 'green' : 'amber'}">${est.estado.charAt(0).toUpperCase() + est.estado.slice(1)}</span></td>
-                    <td><button class="btn btn-secondary btn-sm" onclick='prepararEdicionEstudiante(${estJSON})'>Editar</button></td>
+                    <td style="display: flex; gap: 5px;">
+                        <button class="btn btn-secondary btn-sm" onclick='prepararEdicionEstudiante(${estJSON})'>Editar</button>
+                        <button class="btn btn-secondary btn-sm" style="background:#fee2e2; color:#dc2626; border-color:#fca5a5;" onclick='eliminarEstudiante(${est.id_estudiante})'>Eliminar</button>
+                    </td>
                 </tr>
             `;
             tbody.innerHTML += fila;
@@ -126,4 +130,10 @@ function limpiarFormularioEdicionEstudiante() {
     inputs.forEach(i => i.value = '');
     const selects = document.querySelectorAll('.card select');
     selects.forEach(s => s.selectedIndex = 0);
+}
+
+async function eliminarEstudiante(id_estudiante) {
+    if (confirm('¿Estás seguro de eliminar este Estudiante? Toda su información se perderá de forma irreversible.')) {
+        if (await guardarDatos('estudiantes', 'eliminar', { id_estudiante })) cargarEstudiantes();
+    }
 }

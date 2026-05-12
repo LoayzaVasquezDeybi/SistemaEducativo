@@ -1,28 +1,48 @@
 <div class="sec-title">Gestión de Apoderados</div>
-<div class="sec-sub">Registro de apoderados y su vinculación con estudiantes</div>
+<div class="sec-sub">Registro de padres, madres o tutores de los estudiantes</div>
 <div class="card">
   <div class="card-title">Nuevo apoderado</div>
   <div class="form-row cols3">
-    <div class="form-group"><label>Nombres</label><input type="text" placeholder="Carmen Rosa"></div>
-    <div class="form-group"><label>Apellidos</label><input type="text" placeholder="García Ríos"></div>
-    <div class="form-group"><label>DNI</label><input type="text" placeholder="40123456"></div>
+    <div class="form-group"><label>Nombres</label><input type="text" id="apo-nombre" placeholder="Ej. Juan"></div>
+    <div class="form-group"><label>Apellidos</label><input type="text" id="apo-apellido" placeholder="Ej. Pérez"></div>
+    <div class="form-group"><label>DNI</label><input type="text" id="apo-dni" placeholder="Ej. 12345678"></div>
   </div>
   <div class="form-row cols3">
-    <div class="form-group"><label>Parentesco</label><select><option>Madre</option><option>Padre</option><option>Tutor</option><option>Otro</option></select></div>
-    <div class="form-group"><label>Teléfono</label><input type="text" placeholder="987000111"></div>
-    <div class="form-group"><label>Estudiante asociado</label><select><option>Ana Lucía García (EST-001)</option><option>Diego Martínez (EST-002)</option></select></div>
+    <div class="form-group"><label>Email</label><input type="email" id="apo-email" placeholder="Ej. juan@correo.com"></div>
+    <div class="form-group">
+      <label>Asignar a Estudiante (Opcional)</label>
+      <select id="apo-estudiante">
+        <option value="">Cargando estudiantes...</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Parentesco</label>
+      <select id="apo-parentesco">
+        <option value="">Seleccionar</option>
+        <option value="Padre">Padre</option>
+        <option value="Madre">Madre</option>
+        <option value="Tutor">Tutor</option>
+        <option value="Abuelo/a">Abuelo/a</option>
+        <option value="Tío/a">Tío/a</option>
+      </select>
+    </div>
   </div>
-  <div class="btn-row"><button class="btn btn-primary">Registrar apoderado</button></div>
+  <div class="btn-row">
+    <button id="btn-registrar-apoderado" class="btn btn-primary">Registrar apoderado</button>
+  </div>
 </div>
 <div class="card">
-  <div class="card-title">Listado de apoderados</div>
+  <div class="card-title">Listado de Apoderados</div>
+  <div style="margin-bottom: 15px;">
+    <input type="text" id="buscar-apoderado" placeholder="🔍 Buscar apoderado por nombre o DNI..." style="width: 100%; max-width: 350px; padding: 8px; border-radius: 4px; border: 1px solid #ccc;">
+  </div>
   <div class="table-wrap">
-    <table>
-      <thead><tr><th>Nombre</th><th>DNI</th><th>Parentesco</th><th>Estudiante</th><th>Teléfono</th></tr></thead>
-      <tbody>
-        <tr><td>Carmen García</td><td>40123456</td><td>Madre</td><td>Ana Lucía García</td><td>987000111</td></tr>
-        <tr><td>Roberto Martínez</td><td>41234567</td><td>Padre</td><td>Diego Martínez</td><td>986111222</td></tr>
-      </tbody>
+    <table id="tabla-apoderados">
+      <thead><tr><th>Nombre</th><th>DNI</th><th>Email</th><th>Estudiantes a cargo</th><th>Estado</th><th>Acciones</th></tr></thead>
+      <tbody></tbody>
     </table>
   </div>
 </div>
+<script>
+  if (typeof inicializarApoderados === 'function') inicializarApoderados();
+</script>

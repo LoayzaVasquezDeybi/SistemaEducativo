@@ -49,3 +49,17 @@ function limpiarFormulario(button) {
         }
     });
 }
+
+// ========== UTILIDAD: Buscador en tablas ==========
+function configurarBuscador(inputId, tablaId) {
+    const input = document.getElementById(inputId);
+    if (!input) return;
+    input.addEventListener('keyup', function() {
+        const term = this.value.toLowerCase();
+        const rows = document.querySelectorAll(`#${tablaId} tbody tr`);
+        rows.forEach(row => {
+            const text = row.textContent.toLowerCase();
+            row.style.display = text.includes(term) ? '' : 'none';
+        });
+    });
+}
