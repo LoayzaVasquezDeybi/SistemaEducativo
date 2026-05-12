@@ -5,6 +5,15 @@ function inicializarEstudiantes() {
     cargarEstudiantes();
     cargarCombos();
     document.getElementById('btn-registrar-estudiante').addEventListener('click', registrarEstudiante);
+
+    // Configuración del botón de Exportar PDF
+    const btnExportar = document.getElementById('btn-exportar-pdf');
+    if (btnExportar) {
+        btnExportar.addEventListener('click', () => {
+            window.open('api/exportar_estudiantes.php', '_blank');
+        });
+    }
+
     configurarBuscador('buscar-estudiante', 'tabla-estudiantes');
 }
 
