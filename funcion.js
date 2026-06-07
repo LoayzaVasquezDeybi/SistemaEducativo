@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         // 3. Permisos por rol (Qué paneles puede ver cada quién)
         const permisos = {
-            1: ['dashboard', 'usuarios', 'estudiantes', 'docentes', 'apoderados', 'roles', 'cursos', 'aulas', 'horarios', 'vacantes', 'notas', 'asistencia', 'incidencias', 'matricula', 'ficha', 'pagos', 'documentos'], // Admin ve TODO
+            1: ['dashboard', 'usuarios', 'estudiantes', 'docentes', 'apoderados', 'roles', 'cursos', 'aulas', 'horarios', 'periodos', 'vacantes', 'notas', 'asistencia', 'incidencias', 'matricula', 'ficha', 'pagos', 'documentos'], // Admin ve TODO
             2: ['dashboard', 'estudiantes', 'horarios', 'notas', 'asistencia', 'incidencias'], // Docente solo ve lo académico
             3: ['dashboard', 'horarios', 'notas', 'ficha'] // Alumno solo ve su info básica
         };
@@ -70,6 +70,7 @@ function navigate(panelName) {
         'cursos': 'Gestión de Cursos',
         'aulas': 'Gestión de Aulas',
         'horarios': 'Horarios',
+        'periodos': 'Periodos Académicos',
         'vacantes': 'Vacantes',
         'notas': 'Registro de Notas',
         'asistencia': 'Control de Asistencia',

@@ -1,16 +1,73 @@
-<div class="sec-title">Vacantes</div>
-<div class="sec-sub">Control de cupos disponibles por grado y sección</div>
-<div class="card">
-  <div class="table-wrap">
-    <table>
-      <thead><tr><th>Grado</th><th>Sección</th><th>Capacidad</th><th>Matriculados</th><th>Vacantes</th><th>Disponibilidad</th></tr></thead>
-      <tbody>
-        <tr><td>1°</td><td>A</td><td>35</td><td>32</td><td>3</td><td><div class="vac-bar"><div class="vac-fill" style="width:91%"></div></div></td></tr>
-        <tr><td>1°</td><td>B</td><td>35</td><td>28</td><td>7</td><td><div class="vac-bar"><div class="vac-fill" style="width:80%"></div></div></td></tr>
-        <tr><td>2°</td><td>A</td><td>30</td><td>30</td><td>0</td><td><div class="vac-bar"><div class="vac-fill" style="width:100%;background:var(--danger)"></div></div></td></tr>
-        <tr><td>3°</td><td>A</td><td>35</td><td>20</td><td>15</td><td><div class="vac-bar"><div class="vac-fill" style="width:57%;background:var(--accent2)"></div></div></td></tr>
-        <tr><td>5°</td><td>C</td><td>30</td><td>25</td><td>5</td><td><div class="vac-bar"><div class="vac-fill" style="width:83%"></div></div></td></tr>
-      </tbody>
-    </table>
-  </div>
+<div>
+    <div class="ficha-header" style="justify-content: space-between;">
+        <div>
+            <h2 class="sec-title">Gestión de Vacantes</h2>
+            <p class="sec-sub">Administra la disponibilidad de cupos y secciones para el periodo escolar.</p>
+        </div>
+        <button class="btn btn-primary" onclick="mostrarFormularioVacante()">+ Nueva Vacante</button>
+    </div>
+
+    <!-- Vista de Lista -->
+    <div id="vista-lista-vacantes" class="card">
+        <div class="table-wrap">
+            <table id="tabla-vacantes">
+                <thead>
+                    <tr>
+                        <th>ID Vacante</th>
+                        <th>Periodo</th>
+                        <th>Grado</th>
+                        <th>Sección</th>
+                        <th>Total Vacantes</th>
+                        <th>Disponibles</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Llenado dinámico -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Vista de Formulario -->
+    <div id="vista-form-vacantes" class="card" style="display:none;">
+        <h3 class="card-title" id="titulo-form-vacante">Registrar Nueva Vacante</h3>
+        <form id="form-vacante" onsubmit="event.preventDefault(); guardarVacante();">
+            <input type="hidden" id="vacante_id">
+            <div class="form-row cols3">
+                <div class="form-group">
+                    <label>Periodo</label>
+                    <select id="vacante_periodo" required></select>
+                </div>
+                <div class="form-group">
+                    <label>Grado</label>
+                    <select id="vacante_grado" required></select>
+                </div>
+                <div class="form-group">
+                    <label>Sección</label>
+                    <select id="vacante_seccion" required></select>
+                </div>
+            </div>
+            <div class="form-row cols2">
+                <div class="form-group">
+                    <label>Total Vacantes</label>
+                    <input type="number" id="vacante_total" required min="0">
+                </div>
+                <div class="form-group">
+                    <label>Vacantes Disponibles</label>
+                    <input type="number" id="vacante_disponibles" required min="0">
+                </div>
+            </div>
+            <div class="btn-row" style="margin-top: 15px;">
+                <button type="submit" class="btn btn-primary">Guardar Registro</button>
+                <button type="button" class="btn btn-secondary" onclick="ocultarFormularioVacante()">Cancelar</button>
+            </div>
+        </form>
+    </div>
 </div>
+
+<script>
+  if (typeof inicializarVacantes === 'function') {
+    inicializarVacantes();
+  }
+</script>

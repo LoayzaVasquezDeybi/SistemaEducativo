@@ -1,0 +1,77 @@
+<div>
+    <div class="ficha-header" style="justify-content: space-between;">
+        <div>
+            <h2 class="sec-title">Gestión de Pagos</h2>
+            <p class="sec-sub">Administra el registro de matrículas, pensiones y cobros de estudiantes.</p>
+        </div>
+        <button class="btn btn-primary" onclick="mostrarFormularioPago()">+ Registrar Pago</button>
+    </div>
+
+    <!-- Vista de Lista -->
+    <div id="vista-lista-pagos" class="card">
+        <div class="table-wrap">
+            <table id="tabla-pagos">
+                <thead>
+                    <tr>
+                        <th>Estudiante</th>
+                        <th>Concepto</th>
+                        <th>Monto (S/)</th>
+                        <th>Fecha Pago</th>
+                        <th>Método</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Llenado dinámico -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Vista de Formulario -->
+    <div id="vista-form-pagos" class="card" style="display:none;">
+        <h3 class="card-title" id="titulo-form-pago">Nuevo Pago</h3>
+        <form id="form-pago">
+            <input type="hidden" id="pago_id">
+            <div class="form-row cols2">
+                <div class="form-group">
+                    <label>Matrícula (Estudiante)</label>
+                    <select id="pago_matricula" required></select>
+                </div>
+                <div class="form-group">
+                    <label>Concepto</label>
+                    <input type="text" id="pago_concepto" placeholder="Ej. Pensión Marzo" required>
+                </div>
+            </div>
+            <div class="form-row cols3">
+                <div class="form-group">
+                    <label>Monto (S/)</label>
+                    <input type="number" step="0.01" id="pago_monto" required>
+                </div>
+                <div class="form-group">
+                    <label>Fecha de Pago</label>
+                    <input type="date" id="pago_fecha" required>
+                </div>
+                <div class="form-group">
+                    <label>Método de Pago</label>
+                    <select id="pago_metodo" required></select>
+                </div>
+                <div class="form-group">
+                    <label>Estado Inicial</label>
+                    <select id="pago_estado" required></select>
+                </div>
+            </div>
+            <div class="btn-row" style="margin-top: 15px;">
+                <button type="submit" class="btn btn-primary">Guardar Registro</button>
+                <button type="button" class="btn btn-secondary" onclick="ocultarFormularioPago()">Cancelar</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+  if (typeof inicializarPagos === 'function') {
+    inicializarPagos();
+  }
+</script>
