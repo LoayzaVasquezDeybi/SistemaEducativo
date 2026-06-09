@@ -1,16 +1,26 @@
 // ========== UTILIDAD: Cargar datos desde API ==========
 async function cargarDatos(modulo, accion = 'obtener') {
     try {
+        console.log(`Cargando datos de: ./api/${modulo}.php?action=${accion}`);
         const response = await fetch(`./api/${modulo}.php?action=${accion}`);
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
         const result = await response.json();
+        console.log('Respuesta de cargarDatos:', result);
+        
         if (result.success) {
             return result.data || result;
         } else {
+            console.error('Error en respuesta de API:', result.error || result.message);
             alert('Error: ' + (result.error || result.message || 'Error desconocido'));
             return null;
         }
     } catch(error) {
-        console.error('Error en fetch:', error);
+        console.error('Error en fetch de cargarDatos:', error);
+        alert('Error de conexión: ' + error.message);
         return null;
     }
 }
@@ -18,21 +28,33 @@ async function cargarDatos(modulo, accion = 'obtener') {
 // ========== UTILIDAD: Guardar datos ==========
 async function guardarDatos(modulo, accion, datos) {
     try {
+        console.log(`Guardando datos en: ./api/${modulo}.php?action=${accion}`, datos);
+        
         const response = await fetch(`./api/${modulo}.php?action=${accion}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(datos)
         });
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
         const result = await response.json();
+        console.log('Respuesta de guardarDatos:', result);
+        
         if (result.success) {
-            alert(result.message);
+            alert('✅ ' + (result.message || 'Operación completada exitosamente'));
             return true;
         } else {
-            alert('Error: ' + (result.error || result.message || 'Error desconocido'));
+            const errorMsg = result.error || result.message || 'Error desconocido';
+            console.error('Error en respuesta de API:', errorMsg);
+            alert('❌ Error: ' + errorMsg);
             return false;
         }
     } catch(error) {
-        console.error('Error:', error);
+        console.error('Error en fetch de guardarDatos:', error);
+        alert('❌ Error de conexión: ' + error.message);
         return false;
     }
 }

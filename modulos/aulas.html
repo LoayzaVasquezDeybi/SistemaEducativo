@@ -1,28 +1,60 @@
 <div class="sec-title">Gestión de Aulas</div>
-<div class="sec-sub">Registro y estado de aulas disponibles</div>
-<div class="card">
-  <div class="card-title">Nueva aula</div>
-  <div class="form-row cols3">
-    <div class="form-group"><label>Nombre / Número</label><input type="text" placeholder="Aula 101"></div>
-    <div class="form-group"><label>Ubicación</label><input type="text" placeholder="Pabellón A – 1er piso"></div>
-    <div class="form-group"><label>Capacidad</label><input type="number" placeholder="35"></div>
-  </div>
-  <div class="form-row cols2">
-    <div class="form-group"><label>Tipo</label><select><option>Aula regular</option><option>Laboratorio</option><option>Biblioteca</option></select></div>
-    <div class="form-group"><label>Estado</label><select><option>Disponible</option><option>En uso</option><option>Mantenimiento</option></select></div>
-  </div>
-  <div class="btn-row"><button class="btn btn-primary">Registrar aula</button></div>
+<div class="sec-sub">Configuración de espacios físicos y capacidad de la institución</div>
+
+<div style="display: grid; grid-template-columns: 350px 1fr; gap: 20px; align-items: start;">
+    <!-- Panel de Formulario -->
+    <div class="card">
+        <div class="card-title" id="form-aula-title">Registrar Nueva Aula</div>
+        <form id="form-aula">
+            <input type="hidden" id="id_aula">
+            <div class="form-group">
+                <label>Nombre del Aula</label>
+                <input type="text" id="nombre_aula" required placeholder="Ej: Aula 101 - A">
+            </div>
+            <div class="form-group">
+                <label>Capacidad Máxima</label>
+                <input type="number" id="capacidad" required min="1" placeholder="N° de alumnos">
+            </div>
+            <div class="form-group">
+                <label>Ubicación / Pabellón</label>
+                <input type="text" id="ubicacion" required placeholder="Ej: Pabellón B - 2do Piso">
+            </div>
+            <div class="form-group">
+                <label>Estado</label>
+                <select id="estado" required>
+                    <option value="Activo">Activo</option>
+                    <option value="Inactivo">Inactivo</option>
+                    <option value="Mantenimiento">Mantenimiento</option>
+                </select>
+            </div>
+            <div class="btn-row" style="margin-top: 20px; display: flex; flex-direction: column; gap: 10px;">
+                <button type="submit" class="btn btn-primary" id="btn-guardar-aula" style="width: 100%;">Guardar Aula</button>
+                <button type="button" class="btn btn-secondary" onclick="limpiarFormularioAula()" style="width: 100%;">Cancelar / Limpiar</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Panel de Listado -->
+    <div class="card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <div class="card-title" style="margin: 0;">Aulas Registradas</div>
+            <input type="text" id="buscar-aula" placeholder="🔍 Buscar por nombre o ubicación..." style="padding: 8px 12px; border-radius: 6px; border: 1px solid #e2e8f0; width: 300px; font-size: 13px;">
+        </div>
+        <div class="table-wrap">
+            <table id="tabla-aulas">
+                <thead>
+                    <tr>
+                        <th>Nombre del Aula</th>
+                        <th>Capacidad</th>
+                        <th>Ubicación</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody><!-- Se carga vía AJAX --></tbody>
+            </table>
+        </div>
+    </div>
 </div>
-<div class="card">
-  <div class="card-title">Listado de aulas</div>
-  <div class="table-wrap">
-    <table>
-      <thead><tr><th>Aula</th><th>Ubicación</th><th>Capacidad</th><th>Tipo</th><th>Estado</th></tr></thead>
-      <tbody>
-        <tr><td>Aula 101</td><td>Pab. A – 1er piso</td><td>35</td><td>Regular</td><td><span class="tag tag-green">Disponible</span></td></tr>
-        <tr><td>Aula 201</td><td>Pab. B – 2do piso</td><td>30</td><td>Regular</td><td><span class="tag tag-amber">En uso</span></td></tr>
-        <tr><td>Lab. Cómputo</td><td>Pab. C – 1er piso</td><td>20</td><td>Laboratorio</td><td><span class="tag tag-red">Mantenimiento</span></td></tr>
-      </tbody>
-    </table>
-  </div>
-</div>
+
+

@@ -64,6 +64,10 @@ try {
             } elseif (strpos($nombreRol, 'apoderado') !== false) {
                 $stmtApo = $conn->prepare("INSERT INTO apoderado (id_usuario) VALUES (?)");
                 $stmtApo->execute([$id_usuario]);
+            } elseif (strpos($nombreRol, 'alumno') !== false || strpos($nombreRol, 'estudiante') !== false) {
+                $codigo_est = 'EST-' . date('Y') . '-' . str_pad($id_usuario, 4, '0', STR_PAD_LEFT);
+                $stmtEst = $conn->prepare("INSERT INTO estudiante (nombre, apellido, dni, email, codigo_estudiante, id_usuario, estado) VALUES (?, ?, ?, ?, ?, ?, 'activo')");
+                $stmtEst->execute([$data['nombre'], $data['apellido'], $data['dni'], $data['email'], $codigo_est, $id_usuario]);
             }
 
             $conn->commit();
@@ -105,6 +109,14 @@ try {
                 if ($stmtCheck->fetchColumn() == 0) {
                     $stmtApo = $conn->prepare("INSERT INTO apoderado (id_usuario) VALUES (?)");
                     $stmtApo->execute([$data['id_usuario']]);
+                }
+            } elseif (strpos($nombreRol, 'alumno') !== false || strpos($nombreRol, 'estudiante') !== false) {
+                $stmtCheck = $conn->prepare("SELECT COUNT(*) FROM estudiante WHERE id_usuario = ?");
+                $stmtCheck->execute([$data['id_usuario']]);
+                if ($stmtCheck->fetchColumn() == 0) {
+                    $codigo_est = 'EST-' . date('Y') . '-' . str_pad($data['id_usuario'], 4, '0', STR_PAD_LEFT);
+                    $stmtEst = $conn->prepare("INSERT INTO estudiante (nombre, apellido, dni, email, codigo_estudiante, id_usuario, estado) VALUES (?, ?, ?, ?, ?, ?, 'activo')");
+                    $stmtEst->execute([$data['nombre'], $data['apellido'], $data['dni'], $data['email'], $codigo_est, $data['id_usuario']]);
                 }
             }
 

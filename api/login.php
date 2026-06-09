@@ -38,6 +38,15 @@ try {
             $_SESSION['apellidos'] = $usuario['apellidos'];
             $_SESSION['rol'] = $usuario['id_rol'];
 
+            // Si es Alumno (Rol 3), buscamos su ID de estudiante para la sesión
+            
+            if ($usuario['id_rol'] == 3) {
+                $stmtEst = $conn->prepare("SELECT id_estudiante FROM estudiante WHERE id_usuario = ?");
+                $stmtEst->execute([$usuario['id_usuario']]);
+                $est = $stmtEst->fetch(PDO::FETCH_ASSOC);
+                if ($est) $_SESSION['id_estudiante'] = $est['id_estudiante'];
+            }
+
             echo json_encode(['success' => true, 'message' => 'Login exitoso']);
         } else {
             echo json_encode(['success' => false, 'message' => 'Contraseña incorrecta.']);
