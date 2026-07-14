@@ -54,9 +54,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 function obtenerPermisosPorRol(idRol, rolKey) {
     const todo = ['dashboard', 'usuarios', 'estudiantes', 'docentes', 'apoderados', 'roles', 'cursos', 'aulas', 'horarios', 'periodos', 'vacantes', 'notas', 'asistencia', 'incidencias', 'matricula', 'ficha', 'tutorias', 'pagos', 'documentos'];
     if (Number(idRol) === 1 || rolKey.includes('admin')) return todo;
-    if (rolKey.includes('docente')) return ['dashboard', 'estudiantes', 'horarios', 'notas', 'asistencia', 'incidencias', 'tutorias']; // Sin acceso a 'aulas'
+    if (rolKey.includes('docente')) return ['estudiantes', 'aulas', 'horarios', 'notas', 'asistencia', 'incidencias', 'tutorias'];
     if (rolKey.includes('recepcion')) return ['dashboard', 'matricula', 'pagos', 'ficha'];
-    if (rolKey.includes('alumno') || rolKey.includes('estudiante')) return ['dashboard', 'cursos', 'horarios', 'notas', 'asistencia']; // Sin acceso a 'aulas'
+    if (rolKey.includes('alumno') || rolKey.includes('estudiante')) return ['dashboard', 'cursos', 'aulas', 'horarios', 'notas', 'asistencia'];
     return ['dashboard'];
 }
 

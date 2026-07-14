@@ -22,9 +22,16 @@ function inicializarAulas() {
     // Cargar datos
     listarAulas();
     
-    // Configurar buscador
+    // Configurar buscador solo por nombre del aula
     if (buscar) {
-        configurarBuscador('buscar-aula', 'tabla-aulas');
+        buscar.addEventListener('keyup', function() {
+            const term = this.value.toLowerCase().trim();
+            const rows = document.querySelectorAll('#tabla-aulas tbody tr');
+            rows.forEach(row => {
+                const nombre = row.cells[0]?.textContent?.toLowerCase() || '';
+                row.style.display = nombre.includes(term) ? '' : 'none';
+            });
+        });
     }
 
     // Asignar evento submit al formulario
