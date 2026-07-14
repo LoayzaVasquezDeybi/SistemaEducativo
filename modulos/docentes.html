@@ -3,7 +3,9 @@
 
 <div class="card">
   <div class="card-title">Nuevo docente</div>
+  <input type="hidden" id="doc-id" value="">
   <div class="form-row cols3">
+    <div class="form-group"><label>Código</label><input type="text" id="doc-codigo" placeholder="DOC-001"></div>
     <div class="form-group"><label>Nombres</label><input type="text" id="doc-nombre" placeholder="Luis Alberto"></div>
     <div class="form-group"><label>Apellidos</label><input type="text" id="doc-apellido" placeholder="Torres Vega"></div>
     <div class="form-group"><label>DNI</label><input type="text" id="doc-dni" placeholder="20123456"></div>
@@ -16,10 +18,19 @@
       <select id="doc-curso"><option value="">Cargando cursos...</option></select>
     </div>
   </div>
+  <div class="form-row cols3">
+    <div class="form-group">
+      <label>Estado</label>
+      <select id="doc-estado">
+        <option value="activo">Activo</option>
+        <option value="inactivo">Inactivo</option>
+      </select>
+    </div>
+  </div>
   <div class="btn-row">
-    <button id="btn-registrar-docente" class="btn btn-primary">Registrar docente</button>
-    <button class="btn btn-secondary" onclick="limpiarFormularioDocente()">Limpiar / Cancelar</button>
-    <button class="btn btn-secondary" id="btn-exportar-docentes-pdf">Exportar PDF</button>
+    <button id="btn-registrar-docente" class="btn btn-primary" type="button">Registrar docente</button>
+    <button class="btn btn-secondary" type="button" onclick="limpiarFormularioDocente()">Limpiar / Cancelar</button>
+    <button class="btn btn-secondary" type="button" id="btn-exportar-docentes-pdf">Exportar PDF</button>
   </div>
 </div>
 

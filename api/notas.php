@@ -20,7 +20,7 @@ try {
                 INNER JOIN curso c ON cd.id_curso=c.id_curso
                 INNER JOIN grado g ON h.id_grado=g.id_grado
                 INNER JOIN seccion s ON h.id_seccion=s.id_seccion
-                WHERE cd.id_docente=? ORDER BY g.id_grado,s.nombre,c.nombre");
+                WHERE cd.id_docente=? ORDER BY h.id_grado,s.nombre,c.nombre");
             $stmt->execute([$user['id_docente']]);
             $periodos=$conn->query("SELECT id_periodo_evaluacion,nombre FROM periodo_evaluacion ORDER BY id_periodo_evaluacion")->fetchAll(PDO::FETCH_ASSOC);
             echo json_encode(['success'=>true,'asignaciones'=>$stmt->fetchAll(PDO::FETCH_ASSOC),'periodos'=>$periodos,'evaluaciones'=>nombresEvaluacionesPlanilla()]);

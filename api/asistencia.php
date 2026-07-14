@@ -14,7 +14,7 @@ try {
             $stmt=$conn->prepare("SELECT DISTINCT cd.id_curso_docente,h.id_grado,h.id_seccion,c.nombre AS curso,g.nombre AS grado,s.nombre AS seccion
                 FROM horario h INNER JOIN curso_docente cd ON h.id_curso_docente=cd.id_curso_docente
                 INNER JOIN curso c ON cd.id_curso=c.id_curso INNER JOIN grado g ON h.id_grado=g.id_grado INNER JOIN seccion s ON h.id_seccion=s.id_seccion
-                WHERE cd.id_docente=? ORDER BY g.id_grado,s.nombre,c.nombre");
+                WHERE cd.id_docente=? ORDER BY h.id_grado,s.nombre,c.nombre");
             $stmt->execute([$user['id_docente']]);
             echo json_encode(['success'=>true,'asignaciones'=>$stmt->fetchAll(PDO::FETCH_ASSOC)]);
             break;

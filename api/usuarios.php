@@ -35,10 +35,15 @@ try {
             // Iniciamos transacción para guardar en múltiples tablas de forma segura
             $conn->beginTransaction();
 
+            $contrasena = $data['contrasena'] ?? $data['password'] ?? '';
+            if (!$contrasena) {
+                throw new Exception('La contraseña es obligatoria para crear un usuario');
+            }
+
             $sql = "INSERT INTO usuario (nombres, apellidos, dni, email, password_hash, id_rol, id_estado_usuario) VALUES (?, ?, ?, ?, ?, ?, ?)";
             $stmt = $conn->prepare($sql);
             
-            $pass_hash = password_hash($data['contrasena'], PASSWORD_BCRYPT);
+            $pass_hash = password_hash($contrasena, PASSWORD_BCRYPT);
             
             $stmt->execute([
                 $data['nombre'], 
@@ -85,8 +90,8 @@ try {
                 $data['apellido'], 
                 $data['dni'],
                 $data['email'], 
-                $data['rol'], 
-                $data['estado'], 
+                $data['rol'] ?? $data['id_rol'] ?? null, 
+                $data['estado'] ?? $data['id_estado_usuario'] ?? 1, 
                 $data['id_usuario']
             ]);
 

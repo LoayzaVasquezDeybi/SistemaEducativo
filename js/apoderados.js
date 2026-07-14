@@ -1,6 +1,12 @@
 async function inicializarApoderados() {
     await cargarCombosApoderado();
     await cargarApoderados();
+    configurarBuscador('buscar-apoderado', 'tabla-apoderados');
+
+    const btnRegistrar = document.getElementById('btn-registrar-apoderado');
+    if (btnRegistrar) {
+        btnRegistrar.onclick = guardarApoderado;
+    }
 }
 
 async function cargarCombosApoderado() {
@@ -36,14 +42,23 @@ async function cargarApoderados() {
 }
 
 function editarApoderado(apo) {
-    document.getElementById('apo-id').value = apo.id_apoderado;
-    document.getElementById('apo-nombre').value = apo.nombre;
-    document.getElementById('apo-apellido').value = apo.apellido;
-    document.getElementById('apo-dni').value = apo.dni;
-    document.getElementById('apo-email').value = apo.email;
-    document.getElementById('apo-estudiante').value = apo.id_estudiante || '';
-    document.getElementById('apo-parentesco').value = apo.parentesco || '';
-    document.getElementById('apo-estado').value = apo.id_estado_usuario;
+    const idInput = document.getElementById('apo-id');
+    const nombre = document.getElementById('apo-nombre');
+    const apellido = document.getElementById('apo-apellido');
+    const dni = document.getElementById('apo-dni');
+    const email = document.getElementById('apo-email');
+    const estudiante = document.getElementById('apo-estudiante');
+    const parentesco = document.getElementById('apo-parentesco');
+    const estado = document.getElementById('apo-estado');
+
+    if (idInput) idInput.value = apo.id_apoderado;
+    if (nombre) nombre.value = apo.nombre;
+    if (apellido) apellido.value = apo.apellido;
+    if (dni) dni.value = apo.dni;
+    if (email) email.value = apo.email;
+    if (estudiante) estudiante.value = apo.id_estudiante || '';
+    if (parentesco) parentesco.value = apo.parentesco || '';
+    if (estado) estado.value = apo.id_estado_usuario || '1';
 }
 
 async function guardarApoderado() {
@@ -65,8 +80,14 @@ async function guardarApoderado() {
 }
 
 function limpiarFormularioApoderado() {
-    document.querySelectorAll('#card-form-apoderado input, #card-form-apoderado select').forEach(el => el.value = '');
-    document.getElementById('apo-estado').value = 1;
+    const campos = ['#apo-id', '#apo-nombre', '#apo-apellido', '#apo-dni', '#apo-email', '#apo-estudiante', '#apo-parentesco'];
+    campos.forEach(selector => {
+        const el = document.querySelector(selector);
+        if (el) el.value = '';
+    });
+
+    const estado = document.getElementById('apo-estado');
+    if (estado) estado.value = '1';
 }
 
 async function eliminarApoderado(id) {

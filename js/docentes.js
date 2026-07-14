@@ -1,6 +1,17 @@
 async function inicializarDocentes() {
     await cargarCombosDocente();
     await cargarDocentes();
+    configurarBuscador('buscar-docente', 'tabla-docentes');
+
+    const btnRegistrar = document.getElementById('btn-registrar-docente');
+    if (btnRegistrar) {
+        btnRegistrar.onclick = guardarDocente;
+    }
+
+    const btnExportarPdf = document.getElementById('btn-exportar-docentes-pdf');
+    if (btnExportarPdf) {
+        btnExportarPdf.onclick = exportarDocentesPdf;
+    }
 }
 
 async function cargarCombosDocente() {
@@ -36,15 +47,25 @@ async function cargarDocentes() {
 }
 
 function editarDocente(doc) {
-    document.getElementById('doc-id').value = doc.id_docente;
-    document.getElementById('doc-codigo').value = doc.codigo_docente;
-    document.getElementById('doc-nombre').value = doc.nombre;
-    document.getElementById('doc-apellido').value = doc.apellido;
-    document.getElementById('doc-dni').value = doc.dni;
-    document.getElementById('doc-email').value = doc.email;
-    document.getElementById('doc-especialidad').value = doc.especialidad;
-    document.getElementById('doc-curso').value = doc.id_curso || '';
-    document.getElementById('doc-estado').value = doc.estado;
+    const idInput = document.getElementById('doc-id');
+    const codigo = document.getElementById('doc-codigo');
+    const nombre = document.getElementById('doc-nombre');
+    const apellido = document.getElementById('doc-apellido');
+    const dni = document.getElementById('doc-dni');
+    const email = document.getElementById('doc-email');
+    const especialidad = document.getElementById('doc-especialidad');
+    const curso = document.getElementById('doc-curso');
+    const estado = document.getElementById('doc-estado');
+
+    if (idInput) idInput.value = doc.id_docente;
+    if (codigo) codigo.value = doc.codigo_docente || '';
+    if (nombre) nombre.value = doc.nombre;
+    if (apellido) apellido.value = doc.apellido;
+    if (dni) dni.value = doc.dni;
+    if (email) email.value = doc.email;
+    if (especialidad) especialidad.value = doc.especialidad || '';
+    if (curso) curso.value = doc.id_curso || '';
+    if (estado) estado.value = doc.estado || 'activo';
 }
 
 async function guardarDocente() {
@@ -67,8 +88,18 @@ async function guardarDocente() {
 }
 
 function limpiarFormularioDocente() {
-    document.querySelectorAll('#card-form-docente input, #card-form-docente select').forEach(el => el.value = '');
-    document.getElementById('doc-estado').value = 'activo';
+    const campos = ['#doc-id', '#doc-codigo', '#doc-nombre', '#doc-apellido', '#doc-dni', '#doc-email', '#doc-especialidad', '#doc-curso'];
+    campos.forEach(selector => {
+        const el = document.querySelector(selector);
+        if (el) el.value = '';
+    });
+
+    const estado = document.getElementById('doc-estado');
+    if (estado) estado.value = 'activo';
+}
+
+function exportarDocentesPdf() {
+    window.open('./api/exportar_docentes.php', '_blank');
 }
 
 async function eliminarDocente(id) {

@@ -2,7 +2,7 @@
 $host = 'localhost';
 $dbname = 'sistema_escolar_v2';
 $username = 'root';
-$password = '';
+$password = 'admin';
 $port = 3306;
 
 
