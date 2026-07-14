@@ -144,8 +144,36 @@ try {
             $stmtDoc = $conn->prepare("DELETE FROM docente WHERE id_usuario=?");
             $stmtDoc->execute([$id]);
             
+            $stmtGetApo = $conn->prepare("SELECT id_apoderado FROM apoderado WHERE id_usuario=?");
+            $stmtGetApo->execute([$id]);
+            $apo = $stmtGetApo->fetch(PDO::FETCH_ASSOC);
+            if ($apo) {
+                $stmtRelEst = $conn->prepare("DELETE FROM estudiante_apoderado WHERE id_apoderado=?");
+                $stmtRelEst->execute([$apo['id_apoderado']]);
+            }
+
             $stmtApo = $conn->prepare("DELETE FROM apoderado WHERE id_usuario=?");
             $stmtApo->execute([$id]);
+
+            $stmtGetEst = $conn->prepare("SELECT id_estudiante FROM estudiante WHERE id_usuario=?");
+            $stmtGetEst->execute([$id]);
+            $est = $stmtGetEst->fetch(PDO::FETCH_ASSOC);
+            if ($est) {
+                $stmtPagos = $conn->prepare("DELETE p FROM pago p INNER JOIN matricula m ON p.id_matricula = m.id_matricula WHERE m.id_estudiante=?");
+                $stmtPagos->execute([$est['id_estudiante']]);
+
+                $stmtMatCursos = $conn->prepare("DELETE mc FROM matricula_curso mc INNER JOIN matricula m ON mc.id_matricula = m.id_matricula WHERE m.id_estudiante=?");
+                $stmtMatCursos->execute([$est['id_estudiante']]);
+
+                $stmtMat = $conn->prepare("DELETE FROM matricula WHERE id_estudiante=?");
+                $stmtMat->execute([$est['id_estudiante']]);
+
+                $stmtRelApo = $conn->prepare("DELETE FROM estudiante_apoderado WHERE id_estudiante=?");
+                $stmtRelApo->execute([$est['id_estudiante']]);
+            }
+
+            $stmtEst = $conn->prepare("DELETE FROM estudiante WHERE id_usuario=?");
+            $stmtEst->execute([$id]);
             
             $stmt = $conn->prepare("DELETE FROM usuario WHERE id_usuario=?");
             $stmt->execute([$id]);

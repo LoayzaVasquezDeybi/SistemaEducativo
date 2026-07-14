@@ -8,11 +8,26 @@ function inicializarCursos() {
     if (btnRegistrar) {
         btnRegistrar.onclick = registrarCurso;
     }
+
+    const btnExportarCursosPdf = document.getElementById('btn-exportar-cursos-pdf');
+    if (btnExportarCursosPdf) {
+        btnExportarCursosPdf.addEventListener('click', () => {
+            window.open('api/exportar_cursos.php', '_blank');
+        });
+    }
+
+    const btnExportarCursosExcel = document.getElementById('btn-exportar-cursos-excel');
+    if (btnExportarCursosExcel) {
+        btnExportarCursosExcel.addEventListener('click', () => {
+            window.open('api/exportar_cursos_excel.php', '_blank');
+        });
+    }
 }
 
 async function cargarCursos() {
-    const cursos = await cargarDatos('cursos', 'obtener');
-    if (cursos) {
+    const respuesta = await cargarDatos('cursos', 'obtener');
+    if (respuesta && respuesta.data) {
+        const cursos = respuesta.data;
         const tbody = document.querySelector('#tabla-cursos tbody');
         if (tbody) {
             tbody.innerHTML = '';

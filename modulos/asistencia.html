@@ -1,21 +1,59 @@
 <div class="sec-title">Control de Asistencia</div>
-<div class="sec-sub">Registro diario — 05 de mayo de 2026</div>
-<div class="card">
-  <div style="display:flex;gap:10px;margin-bottom:16px;">
-    <input type="date" value="2026-05-05">
-    <select><option>3° A</option><option>1° B</option></select>
-    <button class="btn btn-secondary btn-sm">Cargar</button>
+<div class="sec-sub">Registro de presentes, faltas y tardanzas</div>
+
+<div class="card" id="card-planilla-asistencia" style="display:none;">
+  <div class="card-title">Asistencia por curso, grado y sección</div>
+  <div class="form-row cols2">
+    <div class="form-group"><label>Curso / Grado / Sección asignados</label><select id="asistencia-asignacion"></select></div>
+    <div class="form-group"><label>Fecha</label><input type="date" id="asistencia-planilla-fecha"></div>
+  </div>
+  <div class="btn-row">
+    <button class="btn btn-primary" onclick="cargarPlanillaAsistencia()">Cargar estudiantes</button>
+    <button class="btn btn-success" id="btn-guardar-asistencia-planilla" onclick="guardarPlanillaAsistencia()">Guardar asistencia del curso</button>
+  </div>
+  <div id="estado-planilla-asistencia" style="margin-top:12px;color:var(--muted);font-size:12px;"></div>
+  <div class="table-wrap" style="margin-top:14px;"><table id="tabla-planilla-asistencia"><thead></thead><tbody><tr><td>Seleccione curso y fecha.</td></tr></tbody></table></div>
+
+  <div style="margin-top:24px;padding-top:18px;border-top:1px solid var(--border);">
+    <div class="card-title">Reporte general de asistencia en PDF</div>
+    <div class="form-row cols3">
+      <div class="form-group"><label>Estudiante</label><select id="reporte-asistencia-estudiante"><option value="">Todos los estudiantes del curso</option></select></div>
+      <div class="form-group"><label>Desde</label><input type="date" id="reporte-asistencia-desde"></div>
+      <div class="form-group"><label>Hasta</label><input type="date" id="reporte-asistencia-hasta"></div>
+    </div>
+    <button class="btn btn-secondary" onclick="exportarReporteAsistenciaPDF()">Exportar reporte PDF</button>
+  </div>
+</div>
+
+<div class="card" id="card-form-asistencia">
+  <div class="card-title">Nueva asistencia</div>
+  <input type="hidden" id="asis-id">
+  <div class="form-row cols3">
+    <div class="form-group"><label>Fecha</label><input type="date" id="asis-fecha"></div>
+    <div class="form-group"><label>Estudiante</label><select id="asis-estudiante"></select></div>
+    <div class="form-group"><label>Curso / Docente</label><select id="asis-curso-docente"></select></div>
+  </div>
+  <div class="form-row cols3">
+    <div class="form-group"><label>Estado</label><select id="asis-estado"><option>Presente</option><option>Tardanza</option><option>Falta</option></select></div>
+    <div class="form-group"><label>Observacion</label><input type="text" id="asis-observacion" placeholder="Opcional"></div>
+  </div>
+  <div class="btn-row"><button class="btn btn-primary" onclick="guardarAsistencia()">Guardar asistencia</button><button class="btn btn-secondary" onclick="limpiarFormularioAsistencia()">Limpiar / Cancelar</button></div>
+</div>
+
+<div class="card" id="card-historial-asistencia">
+  <div class="card-title">Historial de asistencia</div>
+  <div class="btn-row" style="justify-content: flex-end; margin-bottom: 15px;">
+    <button id="btn-exportar-asistencia-pdf" class="btn btn-secondary"><i class="fas fa-file-pdf"></i> Exportar a PDF</button>
+    <button id="btn-exportar-asistencia-excel" class="btn btn-secondary"><i class="fas fa-file-excel"></i> Exportar a Excel</button>
   </div>
   <div class="table-wrap">
-    <table>
-      <thead><tr><th>Estudiante</th><th>Estado</th><th>Observación</th></tr></thead>
-      <tbody>
-        <tr><td>Ana García</td><td><select class="asis-select"><option>Presente</option><option>Tardanza</option><option>Falta</option></select></td><td><input type="text" placeholder="—" style="padding:4px 8px;font-size:12px;"></td></tr>
-        <tr><td>Diego Martínez</td><td><select class="asis-select"><option selected>Tardanza</option><option>Presente</option><option>Falta</option></select></td><td><input type="text" placeholder="Llegó 10 min tarde" style="padding:4px 8px;font-size:12px;"></td></tr>
-        <tr><td>Lucía Flores</td><td><select class="asis-select"><option>Presente</option><option>Tardanza</option><option selected>Falta</option></select></td><td><input type="text" placeholder="Justificada" style="padding:4px 8px;font-size:12px;"></td></tr>
-        <tr><td>Carlos Soto</td><td><select class="asis-select"><option selected>Presente</option><option>Tardanza</option><option>Falta</option></select></td><td><input type="text" placeholder="—" style="padding:4px 8px;font-size:12px;"></td></tr>
-      </tbody>
+    <table id="tabla-asistencia">
+      <thead><tr><th>Fecha</th><th>Estudiante</th><th>Curso</th><th>Estado</th><th>Observacion</th><th>Acciones</th></tr></thead>
+      <tbody></tbody>
     </table>
   </div>
-  <div class="btn-row" style="margin-top:16px;"><button class="btn btn-primary">Guardar asistencia</button></div>
 </div>
+
+<script>
+  if (typeof inicializarAsistencia === 'function') inicializarAsistencia();
+</script>

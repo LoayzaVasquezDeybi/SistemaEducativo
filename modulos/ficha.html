@@ -1,0 +1,18 @@
+<div class="sec-title ficha-no-print">Ficha de Matrícula</div>
+<div class="sec-sub ficha-no-print">Ficha completa del estudiante, apoderados y pagos</div>
+
+<div class="card ficha-no-print">
+  <div class="ficha-toolbar">
+    <div class="form-group" style="flex:1;"><label>Matrícula</label><select id="ficha-matricula"></select></div>
+    <button class="btn btn-primary" onclick="cargarFicha()">Generar ficha</button>
+    <button class="btn btn-secondary" onclick="imprimirFicha()">Imprimir</button>
+  </div>
+</div>
+
+<div class="card" id="ficha-contenido">
+  <div class="ficha-vacia">Seleccione una matrícula para generar la ficha.</div>
+</div>
+
+<script>
+  if (typeof inicializarFicha === 'function') inicializarFicha();
+</script>

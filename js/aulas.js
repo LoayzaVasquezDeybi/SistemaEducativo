@@ -36,11 +36,12 @@ function inicializarAulas() {
 }
 
 async function listarAulas() {
-    const data = await cargarDatos('aulas', 'obtener');
+    const respuesta = await cargarDatos('aulas', 'obtener');
     const tbody = document.querySelector('#tabla-aulas tbody');
     tbody.innerHTML = '';
 
-    if (data && data.length > 0) {
+    if (respuesta && respuesta.data && respuesta.data.length > 0) {
+        const data = respuesta.data;
         data.forEach(aula => {
             const estado = aula.estado ? aula.estado.toLowerCase() : '';
             const tagClass = estado === 'activo' ? 'tag tag-green' : (estado === 'inactivo' ? 'tag tag-red' : 'tag tag-amber');

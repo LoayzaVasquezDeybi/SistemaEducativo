@@ -4,9 +4,10 @@ function inicializarDashboard() {
 }
 
 async function cargarEstadisticasDashboard() {
-    const estadisticas = await cargarDatos('dashboard', 'obtener');
+    const respuesta = await cargarDatos('dashboard', 'obtener');
     
-    if (estadisticas) {
+    if (respuesta && respuesta.data) {
+        const estadisticas = respuesta.data;
         const statEstudiantes = document.getElementById('stat-estudiantes');
         const statDocentes = document.getElementById('stat-docentes');
         const statCursos = document.getElementById('stat-cursos');

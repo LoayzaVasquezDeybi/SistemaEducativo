@@ -9,7 +9,7 @@
     --warn:      #f59e0b;
     --danger:    #f87171;
     --text:      #e2e8f0;
-    --muted:     #6b7a99;
+    --muted:     #8fa4ce;
     --nav-w:     220px;
   }
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -205,6 +205,82 @@
   .ficha-field { padding: 10px 14px; background: var(--surface2); border-radius: 8px; }
   .ficha-field .key { font-size: 11px; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: .6px; }
   .ficha-field .val { font-size: 13px; margin-top: 2px; }
+  .ficha-toolbar { display: flex; gap: 10px; align-items: end; }
+  .ficha-vacia { color: var(--muted); text-align: center; padding: 28px 10px; }
+  .ficha-documento { max-width: 920px; margin: 0 auto; color: var(--text); }
+  .ficha-documento-header { display: grid; grid-template-columns: 68px 1fr auto; gap: 18px; align-items: center; padding-bottom: 20px; border-bottom: 2px solid var(--accent); }
+  .ficha-logo { width: 64px; height: 64px; display: grid; place-items: center; border-radius: 14px; background: var(--accent); color: #fff; font-size: 23px; font-weight: 800; }
+  .ficha-institucion h1 { font-size: 23px; line-height: 1.15; margin: 2px 0 4px; }
+  .ficha-institucion p, .ficha-republica { color: var(--muted); font-size: 12px; }
+  .ficha-republica { font-weight: 700; text-transform: uppercase; letter-spacing: .8px; }
+  .ficha-numero { text-align: right; padding: 10px 14px; background: var(--surface2); border: 1px solid var(--border); border-radius: 9px; }
+  .ficha-numero span, .ficha-resumen span, .ficha-dato span { display: block; color: var(--muted); font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .65px; }
+  .ficha-numero strong { display: block; margin-top: 3px; font-family: 'DM Mono', monospace; font-size: 17px; color: var(--accent); }
+  .ficha-resumen { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; margin: 18px 0 22px; overflow: hidden; border: 1px solid var(--border); border-radius: 9px; background: var(--border); }
+  .ficha-resumen > div { padding: 11px 14px; background: var(--surface2); }
+  .ficha-resumen strong { display: block; margin-top: 4px; font-size: 13px; }
+  .ficha-estado { color: var(--warn); text-transform: uppercase; }
+  .ficha-estado.activo { color: var(--accent2); }
+  .ficha-seccion { margin-top: 22px; }
+  .ficha-seccion h2 { display: flex; align-items: center; gap: 9px; margin-bottom: 10px; font-size: 14px; }
+  .ficha-seccion h2 span { display: grid; place-items: center; width: 26px; height: 26px; border-radius: 7px; background: rgba(79,142,247,.15); color: var(--accent); font-size: 10px; }
+  .ficha-datos-grid { display: grid; grid-template-columns: repeat(3, 1fr); border: 1px solid var(--border); border-radius: 9px; overflow: hidden; }
+  .ficha-dato { min-height: 58px; padding: 10px 13px; border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+  .ficha-dato-amplio { grid-column: span 2; }
+  .ficha-dato strong { display: block; margin-top: 5px; font-size: 13px; }
+  .ficha-tabla { border: 1px solid var(--border); }
+  .ficha-tabla th { background: var(--surface2); }
+  .ficha-monto { white-space: nowrap; font-family: 'DM Mono', monospace; }
+  .ficha-sin-datos { text-align: center; color: var(--muted); }
+  .ficha-firmas { display: grid; grid-template-columns: 1fr 1fr; gap: 70px; margin: 62px 30px 20px; }
+  .ficha-firmas > div { text-align: center; }
+  .ficha-firmas span { display: block; border-top: 1px solid var(--muted); margin-bottom: 8px; }
+  .ficha-firmas strong, .ficha-firmas small { display: block; font-size: 11px; }
+  .ficha-firmas small { margin-top: 3px; color: var(--muted); }
+  .ficha-pie { margin-top: 28px; padding-top: 10px; border-top: 1px solid var(--border); color: var(--muted); text-align: center; font-size: 9px; }
+
+  @media (max-width: 700px) {
+    .ficha-toolbar { align-items: stretch; flex-direction: column; }
+    .ficha-documento-header { grid-template-columns: 56px 1fr; }
+    .ficha-numero { grid-column: 1 / -1; text-align: left; }
+    .ficha-resumen, .ficha-datos-grid { grid-template-columns: 1fr; }
+    .ficha-dato-amplio { grid-column: span 1; }
+  }
+
+  @page { size: A4 portrait; margin: 12mm 13mm; }
+  @media print {
+    html, body { width: auto; height: auto; background: #fff !important; color: #172033 !important; font-family: Arial, sans-serif; }
+    body.imprimiendo-ficha .sidebar, body.imprimiendo-ficha .topbar,
+    body.imprimiendo-ficha #panel-container > *:not(#ficha-contenido) { display: none !important; }
+    body.imprimiendo-ficha .app, body.imprimiendo-ficha .main, body.imprimiendo-ficha .content { display: block; width: 100%; height: auto; overflow: visible; padding: 0; }
+    body.imprimiendo-ficha #ficha-contenido { display: block; width: 100%; max-width: none; margin: 0; padding: 0; border: 0; border-radius: 0; background: #fff; box-shadow: none; }
+    body.imprimiendo-ficha .ficha-documento { max-width: none; color: #172033; }
+    body.imprimiendo-ficha .ficha-documento-header { border-color: #1f5da8; padding-bottom: 12px; }
+    body.imprimiendo-ficha .ficha-logo { background: #1f5da8 !important; color: #fff !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    body.imprimiendo-ficha .ficha-institucion p, body.imprimiendo-ficha .ficha-republica,
+    body.imprimiendo-ficha .ficha-numero span, body.imprimiendo-ficha .ficha-resumen span,
+    body.imprimiendo-ficha .ficha-dato span, body.imprimiendo-ficha .ficha-firmas small,
+    body.imprimiendo-ficha .ficha-pie { color: #5d687a; }
+    body.imprimiendo-ficha .ficha-numero, body.imprimiendo-ficha .ficha-resumen,
+    body.imprimiendo-ficha .ficha-datos-grid, body.imprimiendo-ficha .ficha-tabla { border-color: #cbd3df; }
+    body.imprimiendo-ficha .ficha-numero, body.imprimiendo-ficha .ficha-resumen > div,
+    body.imprimiendo-ficha .ficha-tabla th { background: #f0f4f9 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    body.imprimiendo-ficha .ficha-numero strong, body.imprimiendo-ficha .ficha-seccion h2 span { color: #1f5da8; }
+    body.imprimiendo-ficha .ficha-resumen { margin: 12px 0 15px; background: #cbd3df; }
+    body.imprimiendo-ficha .ficha-resumen > div { padding: 8px 11px; }
+    body.imprimiendo-ficha .ficha-seccion { margin-top: 14px; break-inside: avoid; }
+    body.imprimiendo-ficha .ficha-seccion h2 { margin-bottom: 7px; }
+    body.imprimiendo-ficha .ficha-seccion h2 span { background: #e7eef8 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    body.imprimiendo-ficha .ficha-dato { min-height: 48px; padding: 7px 10px; border-color: #cbd3df; }
+    body.imprimiendo-ficha .ficha-tabla th { color: #435067; border-color: #cbd3df; padding: 7px 9px; }
+    body.imprimiendo-ficha .ficha-tabla td { color: #172033; border-color: #dce2ea; padding: 7px 9px; }
+    body.imprimiendo-ficha .table-wrap { overflow: visible; }
+    body.imprimiendo-ficha .ficha-estado { color: #9a6500; }
+    body.imprimiendo-ficha .ficha-estado.activo { color: #08734f; }
+    body.imprimiendo-ficha .ficha-firmas { margin-top: 48px; }
+    body.imprimiendo-ficha .ficha-firmas span { border-color: #667085; }
+    body.imprimiendo-ficha .ficha-pie { border-color: #cbd3df; }
+  }
 
   /* ── INCIDENCIAS ── */
   .inc-row { display: flex; gap: 12px; align-items: flex-start; padding: 12px 0; border-bottom: 1px solid var(--border); }

@@ -1,24 +1,40 @@
 <?php
 header('Content-Type: application/json');
-require_once '../config/conexion.php';
+require_once __DIR__ . '/../config/conexion.php';
+require_once __DIR__ . '/auth.php';
 
 // Silenciar errores para que no ensucien la respuesta JSON
 error_reporting(0); 
 
 $action = $_GET['action'] ?? $_POST['action'] ?? null;
+$user = usuarioActual($conn);
 
 try {
     switch($action) {
         // 1. OBTENER CURSOS Y SU DOCENTE ASIGNADO
         case 'obtener':
+            $filters = [];
+            $params = [];
+            if (esDocente($user) && $user['id_docente']) {
+                $filters[] = 'cd.id_docente = ?';
+                $params[] = $user['id_docente'];
+            } elseif (esAlumno($user) && $user['id_estudiante']) {
+                $filters[] = "EXISTS (
+                    SELECT 1 FROM nota n
+                    WHERE n.id_curso_docente = cd.id_curso_docente AND n.id_estudiante = ?
+                )";
+                $params[] = $user['id_estudiante'];
+            }
             $query = "SELECT c.id_curso, c.nombre, c.descripcion, c.creditos, c.estado,
                              cd.id_docente, u.nombres as docente_nombre, u.apellidos as docente_apellido
                       FROM curso c
                       LEFT JOIN curso_docente cd ON c.id_curso = cd.id_curso
                       LEFT JOIN docente d ON cd.id_docente = d.id_docente
                       LEFT JOIN usuario u ON d.id_usuario = u.id_usuario
+                      " . ($filters ? 'WHERE ' . implode(' AND ', $filters) : '') . "
                       ORDER BY c.nombre";
-            $stmt = $conn->query($query);
+            $stmt = $conn->prepare($query);
+            $stmt->execute($params);
             $cursos = $stmt->fetchAll(PDO::FETCH_ASSOC);
             echo json_encode(['success' => true, 'data' => $cursos]);
             break;
@@ -37,6 +53,7 @@ try {
 
         // 3. CREAR CURSO
         case 'crear':
+            if (!esAdmin($user)) throw new Exception('Solo el administrador puede crear cursos');
             $data = json_decode(file_get_contents('php://input'), true);
             if (!$data) throw new Exception('No se recibieron datos válidos');
             
@@ -77,6 +94,7 @@ try {
 
         // 4. ACTUALIZAR CURSO
         case 'actualizar':
+            if (!esAdmin($user)) throw new Exception('Solo el administrador puede actualizar cursos');
             $data = json_decode(file_get_contents('php://input'), true);
             $conn->beginTransaction();
             

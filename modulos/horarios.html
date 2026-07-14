@@ -1,36 +1,59 @@
 <div class="sec-title">Horarios</div>
-<div class="sec-sub">Vista semanal de clases — 3° Grado Sección A</div>
-<div class="card">
-  <div style="margin-bottom:14px;display:flex;gap:10px;">
-    <select style="flex:1"><option>3° A</option><option>1° B</option><option>5° C</option></select>
-    <select style="flex:1"><option>Semana actual</option><option>Próxima semana</option></select>
+<div class="sec-sub">Creacion y administracion de horarios academicos</div>
+
+<div class="card" id="card-generador-horarios">
+  <div class="card-title">Generador automatico por seccion</div>
+  <div class="form-row cols3">
+    <div class="form-group"><label>Grado</label><select id="gen-horario-grado"></select></div>
+    <div class="form-group"><label>Seccion</label><select id="gen-horario-seccion"></select></div>
+    <div class="form-group" style="align-self:end;">
+      <button class="btn btn-primary" onclick="generarHorarioAutomatico()">Generar horario automatico</button>
+    </div>
   </div>
-  <div class="schedule-grid">
-    <div></div>
-    <div class="sch-head">Lunes</div><div class="sch-head">Martes</div><div class="sch-head">Miércoles</div><div class="sch-head">Jueves</div><div class="sch-head">Viernes</div>
-    <div class="sch-time">07:00</div>
-    <div class="sch-cell filled"><div class="course">Matemáticas</div><div class="teacher">L. Torres</div></div>
-    <div class="sch-cell filled"><div class="course">Comunicación</div><div class="teacher">R. Quispe</div></div>
-    <div class="sch-cell filled"><div class="course">Matemáticas</div><div class="teacher">L. Torres</div></div>
-    <div class="sch-cell filled"><div class="course">Ciencias</div><div class="teacher">P. Salcedo</div></div>
-    <div class="sch-cell filled"><div class="course">Comunicación</div><div class="teacher">R. Quispe</div></div>
-    <div class="sch-time">08:00</div>
-    <div class="sch-cell filled"><div class="course">Historia</div><div class="teacher">R. Quispe</div></div>
-    <div class="sch-cell"></div>
-    <div class="sch-cell filled"><div class="course">Ciencias</div><div class="teacher">P. Salcedo</div></div>
-    <div class="sch-cell filled"><div class="course">Matemáticas</div><div class="teacher">L. Torres</div></div>
-    <div class="sch-cell"></div>
-    <div class="sch-time">09:00</div>
-    <div class="sch-cell"></div>
-    <div class="sch-cell filled"><div class="course">Matemáticas</div><div class="teacher">L. Torres</div></div>
-    <div class="sch-cell"></div>
-    <div class="sch-cell"></div>
-    <div class="sch-cell filled"><div class="course">Historia</div><div class="teacher">R. Quispe</div></div>
-    <div class="sch-time">10:00</div>
-    <div class="sch-cell filled"><div class="course">Comunicación</div><div class="teacher">R. Quispe</div></div>
-    <div class="sch-cell filled"><div class="course">Ciencias</div><div class="teacher">P. Salcedo</div></div>
-    <div class="sch-cell filled"><div class="course">Historia</div><div class="teacher">R. Quispe</div></div>
-    <div class="sch-cell filled"><div class="course">Comunicación</div><div class="teacher">R. Quispe</div></div>
-    <div class="sch-cell filled"><div class="course">Matemáticas</div><div class="teacher">L. Torres</div></div>
+  <div class="btn-row">
+    <button class="btn btn-secondary" onclick="generarHorarioAutomatico(true)">Regenerar horario de esta seccion</button>
+    <button class="btn btn-secondary" onclick="revertirHorarioSeccion()">Revertir horario de esta seccion</button>
+    <button class="btn btn-primary" id="btn-guardar-horario-generado" onclick="guardarHorarioGenerado()" style="display:none;">Guardar vista previa</button>
+    <button class="btn btn-secondary" id="btn-descartar-horario-generado" onclick="descartarHorarioGenerado()" style="display:none;">Descartar vista previa</button>
+  </div>
+  <div id="horario-generador-logs" style="margin-top:10px;color:var(--danger);font-size:13px;"></div>
+  <div class="table-wrap" id="preview-horario-wrap" style="display:none;margin-top:14px;">
+    <table id="tabla-preview-horario">
+      <thead><tr><th>Dia</th><th>Hora</th><th>Curso</th><th>Docente</th><th>Aula</th></tr></thead>
+      <tbody></tbody>
+    </table>
   </div>
 </div>
+
+<div class="card">
+  <div class="card-title">Nuevo horario</div>
+  <input type="hidden" id="horario-id">
+  <div class="form-row cols3">
+    <div class="form-group"><label>Curso / Docente</label><select id="horario-curso-docente"></select></div>
+    <div class="form-group"><label>Aula</label><select id="horario-aula"></select></div>
+    <div class="form-group"><label>Dia</label><select id="horario-dia"><option>Lunes</option><option>Martes</option><option>Miercoles</option><option>Jueves</option><option>Viernes</option><option>Sabado</option></select></div>
+  </div>
+  <div class="form-row cols3">
+    <div class="form-group"><label>Grado</label><select id="horario-grado"></select></div>
+    <div class="form-group"><label>Seccion</label><select id="horario-seccion"></select></div>
+  </div>
+  <div class="form-row cols3">
+    <div class="form-group"><label>Hora inicio</label><input type="time" id="horario-inicio"></div>
+    <div class="form-group"><label>Hora fin</label><input type="time" id="horario-fin"></div>
+  </div>
+  <div class="btn-row"><button class="btn btn-primary" onclick="guardarHorario()">Guardar horario</button><button class="btn btn-secondary" onclick="limpiarFormularioHorario()">Limpiar / Cancelar</button></div>
+</div>
+
+<div class="card">
+  <div class="card-title">Listado de horarios</div>
+  <div class="table-wrap">
+    <table id="tabla-horarios">
+      <thead><tr><th>Dia</th><th>Hora</th><th>Grado/Seccion</th><th>Curso</th><th>Docente</th><th>Aula</th><th>Acciones</th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+  if (typeof inicializarHorarios === 'function') inicializarHorarios();
+</script>

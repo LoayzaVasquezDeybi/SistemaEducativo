@@ -12,7 +12,7 @@ async function cargarDatos(modulo, accion = 'obtener') {
         console.log('Respuesta de cargarDatos:', result);
         
         if (result.success) {
-            return result.data || result;
+            return result; // Devolver el objeto completo para acceder a 'data', 'estudiantes', 'tipos', etc.
         } else {
             console.error('Error en respuesta de API:', result.error || result.message);
             alert('Error: ' + (result.error || result.message || 'Error desconocido'));

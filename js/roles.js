@@ -11,8 +11,9 @@ function inicializarRoles() {
 }
 
 async function cargarRoles() {
-    const roles = await cargarDatos('roles', 'obtener');
-    if (roles) {
+    const respuesta = await cargarDatos('roles', 'obtener');
+    if (respuesta && respuesta.data) {
+        const roles = respuesta.data;
         const tbody = document.querySelector('#tabla-roles tbody');
         if (tbody) {
             tbody.innerHTML = '';

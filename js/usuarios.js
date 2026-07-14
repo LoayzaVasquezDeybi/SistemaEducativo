@@ -1,159 +1,93 @@
-// ========== MÓDULO USUARIOS ==========
-let editandoID = null; // Variable global para rastrear si estamos editando
-
-function inicializarUsuarios() {
-    console.log('Inicializando módulo Usuarios...');
-    cargarUsuarios();
-    cargarRolesUsuario(); // Cargar roles en el <select>
-    const btnRegistrar = document.getElementById('btn-registrar-usuario');
-    if (btnRegistrar) {
-        // Usamos una función anónima para que siempre use la lógica de registrarUsuario
-        btnRegistrar.onclick = registrarUsuario; 
-        console.log('Evento registrar usuario asignado');
-    }
-
-    // --- Nuevos botones de exportación ---
-    const btnExportarPdf = document.getElementById('btn-exportar-usuarios-pdf');
-    if (btnExportarPdf) {
-        btnExportarPdf.addEventListener('click', () => {
-            window.open('api/exportar_usuarios_pdf.php', '_blank');
-        });
-    }
-
-    const btnExportarExcel = document.getElementById('btn-exportar-usuarios-excel');
-    if (btnExportarExcel) {
-        btnExportarExcel.addEventListener('click', () => {
-            window.open('api/exportar_usuarios_excel.php', '_blank');
-        });
-    }
-    // --- Fin nuevos botones de exportación ---
-    configurarBuscador('buscar-usuario', 'tabla-usuarios');
+async function inicializarUsuarios() {
+    await cargarCombosUsuario();
+    await cargarUsuarios();
+    configurarBuscador('user-search', 'tabla-usuarios');
 }
 
-async function cargarRolesUsuario() {
-    const result = await cargarDatos('usuarios', 'combo');
-    if (result && result.success) {
-        const select = document.getElementById('user-rol'); 
-        if (select) {
-            select.innerHTML = '<option value="">Seleccionar Rol...</option>';
-            result.roles.forEach(rol => {
-                select.innerHTML += `<option value="${rol.id_rol}">${rol.nombre}</option>`;
-            });
-        }
-    }
+async function cargarCombosUsuario() {
+    const respuesta = await cargarDatos('usuarios', 'combo');
+    if (!respuesta || !respuesta.roles) return;
+    const selRol = document.getElementById('user-rol');
+    selRol.innerHTML = '<option value="">Seleccione un rol</option>';
+    respuesta.roles.forEach(rol => {
+        selRol.innerHTML += `<option value="${rol.id_rol}">${rol.nombre}</option>`;
+    });
 }
 
 async function cargarUsuarios() {
-    console.log('Cargando usuarios...');
-    const usuarios = await cargarDatos('usuarios', 'obtener');
-    
-    if (usuarios) {
-        const tbody = document.querySelector('#tabla-usuarios tbody');
-        if (tbody) {
-            tbody.innerHTML = '';
-            usuarios.forEach(user => {
-                const rolTexto = user.nombre_rol || 'Desconocido';
-                const estadoTexto = user.id_estado_usuario == 1 ? 'Activo' : 'Inactivo';
-                const tagColor = user.id_estado_usuario == 1 ? 'green' : 'red';
-
-                // Importante: Convertimos el objeto user a string para pasarlo a la función
-                const userJSON = JSON.stringify(user).replace(/'/g, "&apos;");
-
-                const fila = `
-                    <tr>
-                        <td>${user.nombres} ${user.apellidos}</td>
-                        <td>${user.dni || 'S/D'}</td> 
-                        <td>${user.email}</td>
-                        <td><span class="tag tag-blue">${rolTexto}</span></td>
-                        <td><span class="tag tag-${tagColor}">${estadoTexto}</span></td>
-                        <td style="display: flex; gap: 5px;">
-                            <button class="btn btn-secondary btn-sm" onclick='prepararEdicion(${userJSON})'>
-                                Editar
-                            </button>
-                            <button class="btn btn-secondary btn-sm" style="background:#fee2e2; color:#dc2626; border-color:#fca5a5;" onclick='eliminarUsuario(${user.id_usuario})'>
-                                Eliminar
-                            </button>
-                        </td>
-                    </tr>
-                `;
-                tbody.innerHTML += fila;
-            });
-        }
-    }
+    const respuesta = await cargarDatos('usuarios', 'obtener');
+    if (!respuesta || !respuesta.data) return;
+    const usuarios = respuesta.data;
+    const tbody = document.querySelector('#tabla-usuarios tbody');
+    tbody.innerHTML = '';
+    usuarios.forEach(user => {
+        const data = JSON.stringify(user).replace(/'/g, '&apos;');
+        const estado = user.id_estado_usuario == 1 ? 'activo' : 'inactivo';
+        tbody.innerHTML += `
+            <tr>
+                <td>${user.nombres} ${user.apellidos}</td>
+                <td>${user.dni}</td>
+                <td>${user.email}</td>
+                <td>${user.nombre_rol || 'Sin rol'}</td>
+                <td><span class="tag tag-${estado === 'activo' ? 'green' : 'red'}">${estado}</span></td>
+                <td style="display:flex; gap:5px;">
+                    <button class="btn btn-secondary btn-sm" onclick='editarUsuario(${data})'>Editar</button>
+                    <button class="btn btn-secondary btn-sm" style="background:#fee2e2;color:#dc2626;border-color:#fca5a5;" onclick="eliminarUsuario(${user.id_usuario})">Eliminar</button>
+                </td>
+            </tr>`;
+    });
 }
 
-// Función para cargar los datos en el formulario
-function prepararEdicion(user) {
-    console.log('Preparando edición de:', user.nombres);
-    editandoID = user.id_usuario;
-
-    document.getElementById('user-nombre').value = user.nombres || '';
-    document.getElementById('user-apellido').value = user.apellidos || '';
-    document.getElementById('user-dni').value = user.dni || '';
-    document.getElementById('user-email').value = user.email || '';
-    
-    const passInput = document.getElementById('user-pass');
-    if(passInput) {
-        passInput.value = '';
-        passInput.placeholder = "Dejar en blanco para no cambiar";
-    }
-    document.getElementById('user-rol').value = user.id_rol || '';
-
-    // Cambiar aspecto del botón
-    const btnRegistrar = document.getElementById('btn-registrar-usuario');
-    btnRegistrar.textContent = "Actualizar datos";
-    btnRegistrar.classList.replace('btn-primary', 'btn-amber');
+function editarUsuario(user) {
+    document.getElementById('user-id').value = user.id_usuario;
+    document.getElementById('user-nombre').value = user.nombres;
+    document.getElementById('user-apellido').value = user.apellidos;
+    document.getElementById('user-dni').value = user.dni;
+    document.getElementById('user-email').value = user.email;
+    document.getElementById('user-rol').value = user.id_rol;
+    document.getElementById('user-estado').value = user.id_estado_usuario;
+    document.getElementById('user-contrasena').value = '';
+    document.getElementById('user-contrasena').placeholder = 'Dejar en blanco para no cambiar';
 }
 
-async function registrarUsuario() {
-    const datos = {
+async function guardarUsuario() {
+    const id = document.getElementById('user-id').value;
+    const data = {
         nombre: document.getElementById('user-nombre').value,
         apellido: document.getElementById('user-apellido').value,
         dni: document.getElementById('user-dni').value,
         email: document.getElementById('user-email').value,
-        contrasena: document.getElementById('user-pass') ? document.getElementById('user-pass').value : '',
-        rol: document.getElementById('user-rol').value
+        rol: document.getElementById('user-rol').value,
+        estado: document.getElementById('user-estado').value,
+        contrasena: document.getElementById('user-contrasena').value
     };
 
-    let accion = 'crear';
-    if (editandoID) {
-        datos.id_usuario = editandoID;
-        datos.estado = 1; // Activo por defecto
-        accion = 'actualizar';
+    if (!data.nombre || !data.apellido || !data.dni || !data.email || !data.rol) {
+        return alert('Los campos nombre, apellido, DNI, email y rol son obligatorios.');
     }
 
-    if (!datos.nombre || !datos.email) {
-        alert('Nombre y Email son obligatorios');
-        return;
+    if (!id && !data.contrasena) {
+        return alert('La contraseña es obligatoria para nuevos usuarios.');
     }
 
-    const success = await guardarDatos('usuarios', accion, datos);
+    const action = id ? 'actualizar' : 'crear';
+    if (id) data.id_usuario = id;
 
-    if (success) {
-        limpiarFormularioEdicion();
+    if (await guardarDatos('usuarios', action, data)) {
+        limpiarFormularioUsuario();
         cargarUsuarios();
     }
 }
 
-function limpiarFormularioEdicion() {
-    editandoID = null;
-    const btnRegistrar = document.getElementById('btn-registrar-usuario');
-    if(btnRegistrar) {
-        btnRegistrar.textContent = "Registrar usuario";
-        btnRegistrar.classList.remove('btn-amber');
-        btnRegistrar.classList.add('btn-primary');
-    }
-    
-    // Limpiamos los campos
-    document.querySelectorAll('#user-nombre, #user-apellido, #user-dni, #user-email, #user-pass').forEach(i => {
-        if(i) { i.value = ''; i.placeholder = ''; }
-    });
-    const select = document.getElementById('user-rol');
-    if(select) select.selectedIndex = 0;
+function limpiarFormularioUsuario() {
+    document.querySelectorAll('#user-id, #user-nombre, #user-apellido, #user-dni, #user-email, #user-rol, #user-estado, #user-contrasena').forEach(el => el.value = '');
+    document.getElementById('user-contrasena').placeholder = 'Contraseña inicial';
 }
 
-async function eliminarUsuario(id_usuario) {
-    if (confirm('¿Estás seguro de eliminar este Usuario? Si es un docente o apoderado, sus datos enlazados también serán borrados irreversiblemente.')) {
-        if (await guardarDatos('usuarios', 'eliminar', { id_usuario })) cargarUsuarios();
+async function eliminarUsuario(id) {
+    if (confirm('¿Está seguro de eliminar este usuario? Esta acción es irreversible y eliminará perfiles asociados (docente, apoderado, etc).')) {
+        if (await guardarDatos('usuarios', 'eliminar', { id_usuario: id })) {
+            cargarUsuarios();
+        }
     }
 }

@@ -1,13 +1,12 @@
 <div>
     <div class="ficha-header" style="justify-content: space-between;">
         <div>
-            <h2 class="sec-title">Registro de Matrículas</h2>
-            <p class="sec-sub">Administra las matrículas activas de los estudiantes en la institución.</p>
+            <h2 class="sec-title">Registro de Matriculas</h2>
+            <p class="sec-sub">Primero crea la solicitud, luego procesa el pago de matricula para activarla y habilitar la ficha.</p>
         </div>
-        <button class="btn btn-primary" onclick="mostrarFormularioMatricula()">+ Nueva Matrícula</button>
+        <button class="btn btn-primary" onclick="mostrarFormularioMatricula()">+ Nueva solicitud</button>
     </div>
 
-    <!-- Vista de Lista -->
     <div id="vista-lista-matriculas" class="card">
         <div class="table-wrap">
             <table id="tabla-matriculas">
@@ -16,45 +15,44 @@
                         <th>Estudiante</th>
                         <th>DNI</th>
                         <th>Vacante</th>
-                        <th>Fecha Matrícula</th>
+                        <th>Fecha</th>
                         <th>Estado</th>
+                        <th>Pago matricula</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <!-- Llenado dinámico -->
-                </tbody>
+                <tbody></tbody>
             </table>
         </div>
     </div>
 
-    <!-- Vista de Formulario -->
     <div id="vista-form-matriculas" class="card" style="display:none;">
-        <h3 class="card-title" id="titulo-form-matricula">Nueva Matrícula</h3>
+        <h3 class="card-title" id="titulo-form-matricula">Nueva solicitud de matricula</h3>
         <form id="form-matricula" onsubmit="event.preventDefault(); guardarMatricula();">
             <input type="hidden" id="matricula_id">
             <div class="form-row cols3">
                 <div class="form-group" style="grid-column: span 2;">
-                    <label>Estudiante</label>
+                    <label>Estudiante preinscrito</label>
                     <select id="matricula_estudiante" required></select>
                 </div>
                 <div class="form-group">
-                    <label>N° Vacante</label>
+                    <label>Vacante</label>
                     <select id="matricula_vacante" required></select>
                 </div>
                 <div class="form-group">
-                    <label>Fecha de Matrícula</label>
+                    <label>Fecha de solicitud</label>
                     <input type="date" id="matricula_fecha" required>
                 </div>
             </div>
             <div class="form-row cols2">
                 <div class="form-group">
-                    <label>Estado de Matrícula</label>
-                    <select id="matricula_estado" required></select>
+                    <label>Estado de Matricula</label>
+                    <select id="matricula_estado" disabled></select>
+                    <small style="color:var(--muted)">Se activa automaticamente al pagar el concepto "matricula".</small>
                 </div>
             </div>
             <div class="btn-row" style="margin-top: 15px;">
-                <button type="submit" class="btn btn-primary">Guardar Registro</button>
+                <button type="submit" class="btn btn-primary">Guardar solicitud</button>
                 <button type="button" class="btn btn-secondary" onclick="ocultarFormularioMatricula()">Cancelar</button>
             </div>
         </form>

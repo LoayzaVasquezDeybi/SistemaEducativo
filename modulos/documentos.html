@@ -1,32 +1,31 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
-</head>
-<body>
-    <div class="sec-title">Gestión de Documentos</div>
-<div class="sec-sub">Carga y clasificación de documentos académicos y administrativos</div>
-<div class="drop-zone" onclick="alert('Selecciona un archivo')">
-  <svg width="36" height="36" viewBox="0 0 20 20" fill="var(--muted)"><path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd"/></svg>
-  <p>Arrastra archivos aquí o haz clic para seleccionar<br><span style="font-size:11px;">PDF, Word, Excel — máx. 10 MB</span></p>
-</div>
+<div class="sec-title">Gestion de Documentos</div>
+<div class="sec-sub">Carga y descarga de documentos academicos</div>
+
 <div class="card">
-  <div style="display:flex;gap:10px;margin-bottom:16px;">
-    <select><option>Todos los tipos</option><option>Matrícula</option><option>Boletas</option><option>Circulares</option></select>
-    <input type="text" placeholder="Buscar documento…" style="flex:1;">
-  </div>
+  <div class="card-title">Subir documento</div>
+  <form id="form-documento">
+    <div class="form-row cols3">
+      <div class="form-group"><label>Archivo</label><input type="file" id="doc-archivo" required></div>
+      <div class="form-group"><label>Tipo</label><select id="doc-tipo"></select></div>
+      <div class="form-group"><label>Usuario responsable</label><select id="doc-usuario"></select></div>
+    </div>
+    <div class="form-row cols3">
+      <div class="form-group"><label>Estudiante relacionado</label><select id="doc-estudiante"></select></div>
+    </div>
+    <div class="btn-row"><button class="btn btn-primary" type="submit">Subir documento</button></div>
+  </form>
+</div>
+
+<div class="card">
+  <div class="card-title">Documentos registrados</div>
   <div class="table-wrap">
-    <table>
-      <thead><tr><th>Nombre</th><th>Tipo</th><th>Estudiante</th><th>Fecha subida</th><th>Acciones</th></tr></thead>
-      <tbody>
-        <tr><td>ficha_matricula_EST001.pdf</td><td><span class="tag tag-blue">Matrícula</span></td><td>Ana García</td><td>01/03/2026</td><td><button class="btn btn-secondary btn-sm">Ver</button> <button class="btn btn-secondary btn-sm">⬇</button></td></tr>
-        <tr><td>boleta_pago_abril.pdf</td><td><span class="tag tag-green">Boleta</span></td><td>Ana García</td><td>05/04/2026</td><td><button class="btn btn-secondary btn-sm">Ver</button> <button class="btn btn-secondary btn-sm">⬇</button></td></tr>
-        <tr><td>circular_actividades_mayo.pdf</td><td><span class="tag tag-amber">Circular</span></td><td>General</td><td>30/04/2026</td><td><button class="btn btn-secondary btn-sm">Ver</button> <button class="btn btn-secondary btn-sm">⬇</button></td></tr>
-      </tbody>
+    <table id="tabla-documentos">
+      <thead><tr><th>Nombre</th><th>Tipo</th><th>Usuario</th><th>Estudiante</th><th>Fecha</th><th>Acciones</th></tr></thead>
+      <tbody></tbody>
     </table>
   </div>
 </div>
-</body>
-</html>
+
+<script>
+  if (typeof inicializarDocumentos === 'function') inicializarDocumentos();
+</script>

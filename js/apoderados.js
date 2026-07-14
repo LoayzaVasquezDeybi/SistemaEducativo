@@ -1,70 +1,76 @@
-// ========== MÓDULO APODERADOS ==========
-function inicializarApoderados() {
-    cargarApoderados();
-    cargarComboEstudiantesApo();
-    const btnRegistrar = document.getElementById('btn-registrar-apoderado');
-    if (btnRegistrar) btnRegistrar.onclick = registrarApoderado;
-    configurarBuscador('buscar-apoderado', 'tabla-apoderados');
+async function inicializarApoderados() {
+    await cargarCombosApoderado();
+    await cargarApoderados();
+}
+
+async function cargarCombosApoderado() {
+    const respuesta = await cargarDatos('apoderados', 'combo_estudiantes');
+    if (!respuesta || !respuesta.estudiantes) return;
+    const selEst = document.getElementById('apo-estudiante');
+    selEst.innerHTML = '<option value="">Seleccione estudiante a vincular</option>';
+    respuesta.estudiantes.forEach(e => selEst.innerHTML += `<option value="${e.id_estudiante}">${e.apellido}, ${e.nombre} (${e.dni})</option>`);
 }
 
 async function cargarApoderados() {
-    const apoderados = await cargarDatos('apoderados', 'obtener');
-    if (apoderados) {
-        const tbody = document.querySelector('#tabla-apoderados tbody');
-        if (tbody) {
-            tbody.innerHTML = '';
-            apoderados.forEach(apo => {
-                const estado = apo.estado ? apo.estado : 'activo';
-                const fila = `
-                    <tr>
-                        <td>${apo.nombre} ${apo.apellido}</td>
-                        <td>${apo.dni}</td>
-                        <td>${apo.email}</td>
-                        <td style="font-size: 13px; color: var(--primary); font-weight:500;">${apo.estudiantes || '<span style="color:var(--muted)">Sin asignar</span>'}</td>
-                        <td><span class="tag tag-${estado === 'activo' ? 'green' : 'amber'}">${estado.charAt(0).toUpperCase() + estado.slice(1)}</span></td>
-                        <td>
-                            <button class="btn btn-secondary btn-sm" style="background:#fee2e2; color:#dc2626; border-color:#fca5a5;" onclick='eliminarApoderado(${apo.id_apoderado})'>Eliminar</button>
-                        </td>
-                    </tr>
-                `;
-                tbody.innerHTML += fila;
-            });
-        }
-    }
+    const respuesta = await cargarDatos('apoderados', 'obtener');
+    if (!respuesta || !respuesta.data) return;
+    const apoderados = respuesta.data;
+    const tbody = document.querySelector('#tabla-apoderados tbody');
+    tbody.innerHTML = '';
+    apoderados.forEach(apo => {
+        const data = JSON.stringify(apo).replace(/'/g, '&apos;');
+        const estado = apo.id_estado_usuario == 1 ? 'activo' : 'inactivo';
+        tbody.innerHTML += `
+            <tr>
+                <td>${apo.apellido}, ${apo.nombre}</td>
+                <td>${apo.dni}</td>
+                <td>${apo.email}</td>
+                <td>${apo.estudiantes || 'Ninguno'}</td>
+                <td><span class="tag tag-${estado === 'activo' ? 'green' : 'red'}">${estado}</span></td>
+                <td style="display:flex; gap:5px;">
+                    <button class="btn btn-secondary btn-sm" onclick='editarApoderado(${data})'>Editar</button>
+                    <button class="btn btn-secondary btn-sm" style="background:#fee2e2;color:#dc2626;border-color:#fca5a5;" onclick="eliminarApoderado(${apo.id_apoderado})">Eliminar</button>
+                </td>
+            </tr>`;
+    });
 }
 
-async function cargarComboEstudiantesApo() {
-    const result = await cargarDatos('apoderados', 'combo_estudiantes');
-    if (result && result.success) {
-        const select = document.getElementById('apo-estudiante');
-        if (select) {
-            select.innerHTML = '<option value="">Seleccionar Estudiante (Opcional)</option>';
-            result.estudiantes.forEach(est => {
-                select.innerHTML += `<option value="${est.id_estudiante}">${est.dni} - ${est.apellido}, ${est.nombre}</option>`;
-            });
-        }
-    }
+function editarApoderado(apo) {
+    document.getElementById('apo-id').value = apo.id_apoderado;
+    document.getElementById('apo-nombre').value = apo.nombre;
+    document.getElementById('apo-apellido').value = apo.apellido;
+    document.getElementById('apo-dni').value = apo.dni;
+    document.getElementById('apo-email').value = apo.email;
+    document.getElementById('apo-estudiante').value = apo.id_estudiante || '';
+    document.getElementById('apo-parentesco').value = apo.parentesco || '';
+    document.getElementById('apo-estado').value = apo.id_estado_usuario;
 }
 
-async function registrarApoderado() {
-    const nombre = document.getElementById('apo-nombre').value;
-    const apellido = document.getElementById('apo-apellido').value;
-    const dni = document.getElementById('apo-dni').value;
-    const email = document.getElementById('apo-email').value;
-    const id_estudiante = document.getElementById('apo-estudiante').value;
-    const parentesco = document.getElementById('apo-parentesco').value;
-
-    if (!nombre || !apellido || !dni || !email) return alert('Por favor, completa los campos obligatorios (Nombre, Apellido, DNI y Email).');
-    if (id_estudiante && !parentesco) return alert('Si seleccionas un estudiante, debes indicar el parentesco.');
-
-    if (await guardarDatos('apoderados', 'crear', { nombre, apellido, dni, email, id_estudiante, parentesco })) {
-        document.querySelectorAll('#apo-nombre, #apo-apellido, #apo-dni, #apo-email, #apo-estudiante, #apo-parentesco').forEach(el => el.value = '');
+async function guardarApoderado() {
+    const id = document.getElementById('apo-id').value;
+    const data = {
+        nombre: document.getElementById('apo-nombre').value,
+        apellido: document.getElementById('apo-apellido').value,
+        dni: document.getElementById('apo-dni').value,
+        email: document.getElementById('apo-email').value,
+        id_estudiante: document.getElementById('apo-estudiante').value,
+        parentesco: document.getElementById('apo-parentesco').value,
+        id_estado_usuario: document.getElementById('apo-estado').value
+    };
+    if (id) data.id_apoderado = id;
+    if (await guardarDatos('apoderados', id ? 'actualizar' : 'crear', data)) {
+        limpiarFormularioApoderado();
         cargarApoderados();
     }
 }
 
-async function eliminarApoderado(id_apoderado) {
-    if (confirm('¿Estás seguro de eliminar este Apoderado? Su usuario asociado también será borrado.')) {
-        if (await guardarDatos('apoderados', 'eliminar', { id_apoderado })) cargarApoderados();
+function limpiarFormularioApoderado() {
+    document.querySelectorAll('#card-form-apoderado input, #card-form-apoderado select').forEach(el => el.value = '');
+    document.getElementById('apo-estado').value = 1;
+}
+
+async function eliminarApoderado(id) {
+    if (confirm('¿Está seguro de eliminar este apoderado? Se eliminará su usuario asociado.') && await guardarDatos('apoderados', 'eliminar', { id_apoderado: id })) {
+        cargarApoderados();
     }
 }

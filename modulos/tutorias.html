@@ -1,0 +1,20 @@
+<div class="sec-title">Tutoría y libretas</div>
+<div class="sec-sub">Asignación de tutores y descarga de libretas por sección</div>
+
+<div class="card" id="tutoria-admin" style="display:none;">
+  <div class="card-title">Asignar tutor a una sección</div>
+  <div class="form-row cols3">
+    <div class="form-group"><label>Docente tutor</label><select id="tutor-docente"></select></div>
+    <div class="form-group"><label>Grado</label><select id="tutor-grado"></select></div>
+    <div class="form-group"><label>Sección</label><select id="tutor-seccion"></select></div>
+  </div>
+  <button class="btn btn-primary" onclick="guardarTutor()">Asignar tutor</button>
+</div>
+
+<div class="card" id="tutoria-resumen">
+  <div class="card-title">Secciones y tutores del periodo actual</div>
+  <div id="tutoria-mensaje" style="color:var(--muted);margin-bottom:14px;"></div>
+  <div class="table-wrap"><table id="tabla-tutorias"><thead></thead><tbody></tbody></table></div>
+</div>
+
+<script>if (typeof inicializarTutorias === 'function') inicializarTutorias();</script>
